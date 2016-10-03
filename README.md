@@ -18,7 +18,14 @@ Document Classification Project based on Python.
 
 ### Setup
 
-Run the following in Terminal for Initial Setup
+* Install Dependencies
+
+```
+# pip3 install -r requirement.txt
+```
+
+
+*Run the following in Terminal for Initial Setup
 
 ```
 # python3 setup.py develop

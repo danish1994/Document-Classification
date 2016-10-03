@@ -20,4 +20,4 @@ setup(name='Document Classification',
           'pytz',
           'cycler'
       ],
-      zip_safe=False)
+      zip_safe=True)

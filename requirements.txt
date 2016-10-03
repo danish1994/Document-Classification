@@ -1,0 +1,10 @@
+ nltk
+ numpy
+ scipy
+ scikit-learn
+ matplotlib
+ setuptools
+ python-dateutil
+ pyparsing
+ pytz
+ cycler
