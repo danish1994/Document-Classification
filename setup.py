@@ -19,5 +19,4 @@ setup(name='Document Classification',
           'pyparsing',
           'pytz',
           'cycler'
-      ],
-      zip_safe=True)
+      ])
