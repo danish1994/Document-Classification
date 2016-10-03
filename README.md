@@ -20,7 +20,7 @@ Document Classification Project based on Python.
 
 Run the following in Terminal for Initial Setup
 
-
-import matplotlib.pyplot as plt
-
+```
+# python3 setup.py develop
+```
 
