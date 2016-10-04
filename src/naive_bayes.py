@@ -10,4 +10,4 @@ model = GaussianNB()
 model.fit(X, Y)
 
 predicted= model.predict([[1,2],[3,4]])
-print (predicted))
+print (predicted)
