@@ -66,33 +66,25 @@ def plot_subfigure(X, Y, title, transform):
     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 
 
-plt.figure(figsize=(8, 6))
+def classify(X,Y):
+    plt.figure(figsize=(8, 6))
 
-# X, Y = make_multilabel_classification(n_classes=2, n_labels=1,
-#                                       allow_unlabeled=False,
-#                                       random_state=1)
+    X = np.array([
+        [1, 1],
+        [2, 1],
+        [2, 5],
+        [2, 2]
+        ], np.int32)
 
+    Y = np.array([
+        [0, 1],
+        [1, 1],
+        [1, 0],
+        [0, 0]
+        ], np.int32)
 
+    plot_subfigure(X, Y, "Plot Graph", "cca")
+    
+    plt.subplots_adjust(.07, .07, .70, .90, .09, .2)
 
-X = np.array([
-    [1, 1],
-    [2, 1],
-    [2, 5],
-    [2, 2]
-    ], np.int32)
-
-Y = np.array([
-    [0, 1],
-    [1, 1],
-    [1, 0],
-    [0, 0]
-    ], np.int32)
-
-#plot_subfigure(X, Y, "With unlabeled samples + CCA", "cca")
-# plot_subfigure(X, Y, 2, "With unlabeled samples + PCA", "pca")
-plot_subfigure(X, Y, "Plot Graph", "cca")
-# plot_subfigure(X, Y, 4, "Without unlabeled samples + PCA", "pca")
-
-plt.subplots_adjust(.07, .07, .70, .90, .09, .2)
-
-plt.show()
+    plt.show()
