@@ -1,5 +1,7 @@
 import nltk as nltk
 import numpy as np
+from nltk.corpus import conll2000
+from nltk.book import *
 
 class ConsecutiveNPChunkTagger(nltk.TaggerI):
     def __init__(self, train_sents):
@@ -38,3 +40,10 @@ class ConsecutiveNPChunker(nltk.ChunkParserI):
         tagged_sents = self.tagger.tag(sentence)
         conlltags = [(w,t,c) for ((w,t),c) in tagged_sents]
         return nltk.chunk.conlltags2tree(conlltags)
+
+train_sents = conll2000.chunked_sents("text1.txt")
+def npchunk_features(sentence, i,history):
+    word, pos = sentence[i]
+    return {"pos":pos}
+chunker  = ConsecutiveNPChunker(train_sents)
+print(chunk)
