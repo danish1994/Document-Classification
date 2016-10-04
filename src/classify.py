@@ -7,18 +7,26 @@ from sklearn.svm import SVC
 from sklearn.preprocessing import LabelBinarizer
 from sklearn.decomposition import PCA
 from sklearn.cross_decomposition import CCA
+from numpy import ones,vstack
+from numpy.linalg import lstsq
 
+def get_line_equation(x1, y1, x2, y2):
+    points = [(x1,y1),(x2,y2)]
+    x_coords, y_coords = zip(*points)
+    A = vstack([x_coords,ones(len(x_coords))]).T
+    m, c = lstsq(A, y_coords)[0]
+    print("Line Solution is y = {m}x + {c}".format(m = round(m, 2), c = round(c, 2)))
 
 def plot_hyperplane(clf, min_x, max_x, linestyle, label):
-    # get the separating hyperplane
     w = clf.coef_[0]
     a = -w[0] / w[1]
-    xx = np.linspace(min_x - 5, max_x + 5)  # make sure the line is long enough
+    xx = np.linspace(min_x - 5, max_x + 5)
     yy = a * xx - (clf.intercept_[0]) / w[1]
+    get_line_equation(xx[0], yy[0], xx[1], yy[1])
     plt.plot(xx, yy, linestyle, label=label)
 
 
-def plot_subfigure(X, Y, subplot, title, transform):
+def plot_subfigure(X, Y, title, transform):
     if transform == "pca":
         X = PCA(n_components=2).fit_transform(X)
     elif transform == "cca":
@@ -35,29 +43,27 @@ def plot_subfigure(X, Y, subplot, title, transform):
     classif = OneVsRestClassifier(SVC(kernel='linear'))
     classif.fit(X, Y)
 
-    plt.subplot(2, 2, subplot)
     plt.title(title)
 
     zero_class = np.where(Y[:, 0])
     one_class = np.where(Y[:, 1])
-    plt.scatter(X[:, 0], X[:, 1], s=40, c='gray')
+
+    plt.scatter(X[:, 0], X[:, 1], s=80, c='gray', label='Unclassified')
     plt.scatter(X[zero_class, 0], X[zero_class, 1], s=160, edgecolors='b',
                facecolors='none', linewidths=2, label='Class 1')
     plt.scatter(X[one_class, 0], X[one_class, 1], s=80, edgecolors='orange',
                facecolors='none', linewidths=2, label='Class 2')
 
-  #  plot_hyperplane(classif.estimators_[0], min_x, max_x, 'k--',      'Boundary\nfor class 1')
-    plot_hyperplane(classif.estimators_[1], min_x, max_x, 'k-.',
-                    'Boundary\nfor class 2')
+    plot_hyperplane(classif.estimators_[0], min_x, max_x, 'k--', 'Boundary\nfor class 1')
+    plot_hyperplane(classif.estimators_[1], min_x, max_x, 'k-', 'Boundary\nfor class 2')
     plt.xticks(())
     plt.yticks(())
 
     plt.xlim(min_x - .5 * max_x, max_x + .5 * max_x)
     plt.ylim(min_y - .5 * max_y, max_y + .5 * max_y)
-    if subplot == 2:
-        plt.xlabel('First principal component')
-        plt.ylabel('Second principal component')
-        plt.legend(loc="upper left")
+    plt.xlabel('First principal component')
+    plt.ylabel('Second principal component')
+    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 
 
 plt.figure(figsize=(8, 6))
@@ -67,14 +73,26 @@ plt.figure(figsize=(8, 6))
 #                                       random_state=1)
 
 
-X = np.array([[1, 2], [4, 5],[4, 3], [1, 4]], np.int32)
-Y = np.array([[0, 1], [0, 1],[1, 0],[0, 0]], np.int32)
 
-plot_subfigure(X, Y, 1, "With unlabeled samples + CCA", "cca")
-plot_subfigure(X, Y, 2, "With unlabeled samples + PCA", "pca")
+X = np.array([
+    [1, 1],
+    [2, 1],
+    [2, 5],
+    [2, 2]
+    ], np.int32)
 
-plot_subfigure(X, Y, 3, "Without unlabeled samples + CCA", "cca")
-plot_subfigure(X, Y, 4, "Without unlabeled samples + PCA", "pca")
+Y = np.array([
+    [0, 1],
+    [1, 1],
+    [1, 0],
+    [0, 0]
+    ], np.int32)
 
-plt.subplots_adjust(.04, .02, .97, .94, .09, .2)
+#plot_subfigure(X, Y, "With unlabeled samples + CCA", "cca")
+# plot_subfigure(X, Y, 2, "With unlabeled samples + PCA", "pca")
+plot_subfigure(X, Y, "Plot Graph", "cca")
+# plot_subfigure(X, Y, 4, "Without unlabeled samples + PCA", "pca")
+
+plt.subplots_adjust(.07, .07, .70, .90, .09, .2)
+
 plt.show()
