@@ -74,8 +74,3 @@ for tag in after_tag:
     sentence, history= zip(*zipfile)
 
     chunker.parse(sentence).draw()
-    # for subtree in tree.subtrees(filter=lambda t: t.node == 'NP'):
-    #     print(subtree.leaves())
-    # postags = sorted(set((w,t,c) for sent in train_sents
-    #           for((w,t),c) in sent.leaves()))
-    # print(chunker.tagger.tag(postags))
