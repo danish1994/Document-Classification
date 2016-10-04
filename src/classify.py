@@ -69,20 +69,6 @@ def plot_subfigure(X, Y, title, transform):
 def classify(X,Y):
     plt.figure(figsize=(8, 6))
 
-    X = np.array([
-        [1, 1],
-        [2, 1],
-        [2, 5],
-        [2, 2]
-        ], np.int32)
-
-    Y = np.array([
-        [0, 1],
-        [1, 1],
-        [1, 0],
-        [0, 0]
-        ], np.int32)
-
     plot_subfigure(X, Y, "Plot Graph", "cca")
     
     plt.subplots_adjust(.07, .07, .70, .90, .09, .2)

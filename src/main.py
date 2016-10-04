@@ -1,4 +1,5 @@
 import numpy as np
+import nltk
 
 from classify import classify
 
