@@ -3,19 +3,23 @@ import numpy as np
 
 class ConsecutiveNPChunkTagger(nltk.TaggerI):
     def __init__(self, train_sents):
-    	train_set = []
+        train_set = []
+
         for tagged_sent in train_sents:
             untagged_sent = nltk.tag.untag(tagged_sent)
             history = []
+
             for i, (word, tag) in enumerate(tagged_sent):
                 featureset = npchunk_features(untagged_sent, i, history)
                 train_set.append( (featureset, tag) )
                 history.append(tag)
+
         self.classifier = nltk.MaxentClassifier.train(
             train_set, algorithm='megam', trace=0)
 
     def tag(self, sentence):
         history = []
+        
         for i, word in enumerate(sentence):
             featureset = npchunk_features(sentence, i, history)
             tag = self.classifier.classify(featureset)
@@ -23,6 +27,7 @@ class ConsecutiveNPChunkTagger(nltk.TaggerI):
         return zip(sentence, history)
 
 class ConsecutiveNPChunker(nltk.ChunkParserI):
+    
     def __init__(self, train_sents):
         tagged_sents = [[((w,t),c) for (w,t,c) in
                          nltk.chunk.tree2conlltags(sent)]
