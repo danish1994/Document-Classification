@@ -56,7 +56,6 @@ class ConsecutiveNPChunker(nltk.ChunkParserI):
     def parse(self, sentence):
         tagged_sents = self.tagger.tag(sentence)
         conlltags = [(w,t,c) for ((w,t),c) in tagged_sents]
-        nltk.chunk.conlltags2tree(conlltags).draw()
         return nltk.chunk.conlltags2tree(conlltags)
 
 train_sents = conll2000.chunked_sents('train.txt', chunk_types=['NP'])
@@ -71,10 +70,10 @@ chunker = ConsecutiveNPChunker(train_sents)
 print(chunker.evaluate(test_sents))
 
 for tag in after_tag:
-    tree = chunker.tagger.tag(tag)
-    sentence, history= zip(*tree)
+    zipfile = chunker.tagger.tag(tag)
+    sentence, history= zip(*zipfile)
 
-    chunker.parse(sentence)
+    chunker.parse(sentence).draw()
     # for subtree in tree.subtrees(filter=lambda t: t.node == 'NP'):
     #     print(subtree.leaves())
     # postags = sorted(set((w,t,c) for sent in train_sents
