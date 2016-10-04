@@ -25,6 +25,21 @@ classifiers = [
 X, Y = make_classification(n_features=2, n_redundant=0, n_informative=2,
                            random_state=1, n_clusters_per_class=1)
 
+# X = np.array([
+#         [1,2],
+#         [2,2],
+#         [3,2],
+#         [2,3]
+#     ], np.int32)
+
+# Y = np.array([
+#         [0,1],
+#         [1,0]
+#     ], np.int32)
+
+print(np.size(X))
+print(np.size(Y))
+
 rng = np.random.RandomState(2)
 X += 2 * rng.uniform(size=X.shape)
 linearly_separable = (X, Y)
