@@ -25,6 +25,24 @@ def plot_hyperplane(clf, min_x, max_x, linestyle, label):
     get_line_equation(xx[0], yy[0], xx[1], yy[1])
     plt.plot(xx, yy, linestyle, label=label)
 
+def plot_color(i):
+    colors = {
+        0: 'b',
+        1: 'g',
+        2: 'r',
+        3: 'orange'
+    }
+    return colors.get(i, 'b')
+
+def plot_marker(i):
+    colors = {
+        0: 'k-',
+        1: 'k--',
+        2: 'k-.',
+        3: ':'
+    }
+    return colors.get(i, 'k-')
+
 
 def plot_subfigure(X, Y, title, transform):
     if transform == "pca":
@@ -45,17 +63,12 @@ def plot_subfigure(X, Y, title, transform):
 
     plt.title(title)
 
-    zero_class = np.where(Y[:, 0])
-    one_class = np.where(Y[:, 1])
+    width = Y.shape[1]
 
-    plt.scatter(X[:, 0], X[:, 1], s=80, c='gray', label='Unclassified')
-    plt.scatter(X[zero_class, 0], X[zero_class, 1], s=160, edgecolors='b',
-               facecolors='none', linewidths=2, label='Class 1')
-    plt.scatter(X[one_class, 0], X[one_class, 1], s=80, edgecolors='orange',
-               facecolors='none', linewidths=2, label='Class 2')
+    for i in range (0,width):
+        plt.scatter(X[np.where(Y[:,i]==1), 0], X[np.where(Y[:,i]==1), 1], s=80, c=plot_color(i), label='Class ' + str(i))
+        plot_hyperplane(classif.estimators_[i], min_x, max_x, plot_marker(i), 'Boundary\nfor class ' + str(i))
 
-    plot_hyperplane(classif.estimators_[0], min_x, max_x, 'k--', 'Boundary\nfor class 1')
-    plot_hyperplane(classif.estimators_[1], min_x, max_x, 'k-', 'Boundary\nfor class 2')
     plt.xticks(())
     plt.yticks(())
 

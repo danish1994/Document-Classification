@@ -1,4 +1,3 @@
-# from Natural Language Processing with Python book.
 from nltk.corpus import conll2000
 import nltk
 import nltk.tag as tagger
@@ -73,4 +72,4 @@ for tag in after_tag:
     zipfile = chunker.tagger.tag(tag)
     sentence, history= zip(*zipfile)
 
-    chunker.parse(sentence).draw()
+    #chunker.parse(sentence).draw()
