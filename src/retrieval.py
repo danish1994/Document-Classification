@@ -1,4 +1,5 @@
 from nltk.corpus import conll2000
+from nltk.corpus import stopwords
 import nltk
 import nltk.tag as tagger
 
@@ -55,12 +56,18 @@ class ConsecutiveNPChunker(nltk.ChunkParserI):
     def parse(self, sentence):
         tagged_sents = self.tagger.tag(sentence)
         conlltags = [(w,t,c) for ((w,t),c) in tagged_sents]
+        #nltk.chunk.conlltags2tree(conlltags).draw()
         return nltk.chunk.conlltags2tree(conlltags)
 
-train_sents = conll2000.chunked_sents('train.txt', chunk_types=['NP'])
-test_sents = conll2000.chunked_sents('test.txt', chunk_types=['NP'])
+train_sents = conll2000.chunked_sents('train.txt')
+test_sents = conll2000.chunked_sents('test.txt')
 
-sentence = "A mobile phone is a portable telephone that can make and receive calls over a radio frequency carrier while the user is moving within a telephone service area. The radio frequency link establishes a connection to the switching systems of a mobile phone operator, which provides access to the public switched telephone network (PSTN). Most modern mobile telephone services use a cellular network architecture, and therefore mobile telephones are often also called cellular telephones or cell phones. In addition to telephony, 2000s-era mobile phones support a variety of other services, such as text messaging, MMS, email, Internet access, short-range wireless communications (infrared, Bluetooth), business applications, gaming, and digital photography. Mobile phones which offer these and more general computing capabilities are referred to as smartphones."
+f = open("vocab.txt")
+sentence = f.read()
+stop = set(stopwords.words('english'))
+sentence = [i for i in sentence.split() if i not in stop]
+print(sentence)
+sentence = ' '.join(str(e) for e in sentence)
 seent = nltk.sent_tokenize(sentence)
 tagged = [nltk.word_tokenize(se) for se in seent]
 after_tag = [nltk.pos_tag(ta) for ta in tagged]
@@ -68,8 +75,10 @@ after_tag = [nltk.pos_tag(ta) for ta in tagged]
 chunker = ConsecutiveNPChunker(train_sents)
 print(chunker.evaluate(test_sents))
 
-for tag in after_tag:
-    zipfile = chunker.tagger.tag(tag)
-    sentence, history= zip(*zipfile)
+senti = after_tag[0]
+print(nltk.ne_chunk(senti).draw())
 
-    #chunker.parse(sentence).draw()
+for tag in after_tag:
+    tree = chunker.tagger.tag(tag)
+    sentence, history= zip(*tree)
+    chunker.parse(sentence)
