@@ -14,12 +14,12 @@ from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 
-h = .02 
+h = .02
 
 names = ["RBF SVM"]
 
 classifiers = [
-    SVC(gamma=2, C=1),]
+    SVC(gamma=2, C=1), ]
 
 
 X, Y = make_classification(n_features=2, n_redundant=0, n_informative=2,

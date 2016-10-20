@@ -7,15 +7,18 @@ from sklearn.svm import SVC
 from sklearn.preprocessing import LabelBinarizer
 from sklearn.decomposition import PCA
 from sklearn.cross_decomposition import CCA
-from numpy import ones,vstack
+from numpy import ones, vstack
 from numpy.linalg import lstsq
 
+
 def get_line_equation(x1, y1, x2, y2):
-    points = [(x1,y1),(x2,y2)]
+    points = [(x1, y1), (x2, y2)]
     x_coords, y_coords = zip(*points)
-    A = vstack([x_coords,ones(len(x_coords))]).T
+    A = vstack([x_coords, ones(len(x_coords))]).T
     m, c = lstsq(A, y_coords)[0]
-    print("Line Solution is y = {m}x + {c}".format(m = round(m, 2), c = round(c, 2)))
+    print(
+        "Line Solution is y = {m}x + {c}".format(m=round(m, 2), c=round(c, 2)))
+
 
 def plot_hyperplane(clf, min_x, max_x, linestyle, label):
     w = clf.coef_[0]
@@ -25,6 +28,7 @@ def plot_hyperplane(clf, min_x, max_x, linestyle, label):
     get_line_equation(xx[0], yy[0], xx[1], yy[1])
     plt.plot(xx, yy, linestyle, label=label)
 
+
 def plot_color(i):
     colors = {
         0: 'b',
@@ -33,6 +37,7 @@ def plot_color(i):
         3: 'orange'
     }
     return colors.get(i, 'b')
+
 
 def plot_marker(i):
     colors = {
@@ -65,9 +70,11 @@ def plot_subfigure(X, Y, title, transform):
 
     width = Y.shape[1]
 
-    for i in range (0,width):
-        plt.scatter(X[np.where(Y[:,i]==1), 0], X[np.where(Y[:,i]==1), 1], s=80, c=plot_color(i), label='Class ' + str(i))
-        plot_hyperplane(classif.estimators_[i], min_x, max_x, plot_marker(i), 'Boundary\nfor class ' + str(i))
+    for i in range(0, width):
+        plt.scatter(X[np.where(Y[:, i] == 1), 0], X[np.where(
+            Y[:, i] == 1), 1], s=80, c=plot_color(i), label='Class ' + str(i))
+        plot_hyperplane(classif.estimators_[i], min_x, max_x, plot_marker(
+            i), 'Boundary\nfor class ' + str(i))
 
     plt.xticks(())
     plt.yticks(())
@@ -79,11 +86,11 @@ def plot_subfigure(X, Y, title, transform):
     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 
 
-def classify(X,Y):
+def classify(X, Y):
     plt.figure(figsize=(8, 6))
 
     plot_subfigure(X, Y, "Plot Graph", "cca")
-    
+
     plt.subplots_adjust(.07, .07, .70, .90, .09, .2)
 
     plt.show()
