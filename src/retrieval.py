@@ -21,14 +21,6 @@ class UnigramChunker(nltk.ChunkParserI):
                      for ((word, pos), chunktag) in zip(sentence, chunktags)]
         return nltk.chunk.util.conlltags2tree(conlltags)
 
-# def npchunk_features(sentence, i, history):
-    # word, pos = sentence[i]
-#     if i == 0:
-#        prevword, prevpos = "<START>", "<START>"
-#     else:
-#        prevword, prevpos = sentence[i-1]
-#     return {"pos": pos, "prevpos": prevpos}
-
 
 def npchunk_features(sentence, i, history):
     word, pos = sentence[i]
@@ -36,27 +28,36 @@ def npchunk_features(sentence, i, history):
         prevword, prevpos = "<START>", "<START>"
     else:
         prevword, prevpos = sentence[i - 1]
-    if i == len(sentence) - 1:
-        nextword, nextpos = "<END>", "<END>"
-    else:
-        nextword, nextpos = sentence[i + 1]
-    return {"pos": pos,
-            "word": word,
-            "prevpos": prevpos,
-            "nextpos": nextpos,
-            "prevpos+pos": "%s+%s" % (prevpos, pos),
-            "pos+nextpos": "%s+%s" % (pos, nextpos),
-            "tags-since-dt": tags_since_dt(sentence, i)}
+    return {"pos": pos, "prevpos": prevpos}
 
 
-def tags_since_dt(sentence, i):
-    tags = set()
-    for word, pos in sentence[:i]:
-        if pos == 'DT':
-            tags = set()
-        else:
-            tags.add(pos)
-    return '+'.join(sorted(tags))
+# def npchunk_features(sentence, i, history):
+#     word, pos = sentence[i]
+#     if i == 0:
+#         prevword, prevpos = "<START>", "<START>"
+#     else:
+#         prevword, prevpos = sentence[i - 1]
+#     if i == len(sentence) - 1:
+#         nextword, nextpos = "<END>", "<END>"
+#     else:
+#         nextword, nextpos = sentence[i + 1]
+#     return {"pos": pos,
+#             "word": word,
+#             "prevpos": prevpos,
+#             "nextpos": nextpos,
+#             "prevpos+pos": "%s+%s" % (prevpos, pos),
+#             "pos+nextpos": "%s+%s" % (pos, nextpos),
+#             "tags-since-dt": tags_since_dt(sentence, i)}
+
+
+# def tags_since_dt(sentence, i):
+#     tags = set()
+#     for word, pos in sentence[:i]:
+#         if pos == 'DT':
+#             tags = set()
+#         else:
+#             tags.add(pos)
+#     return '+'.join(sorted(tags))
 
 
 class ConsecutiveNPChunkTagger(nltk.TaggerI):
@@ -99,16 +100,16 @@ class ConsecutiveNPChunker(nltk.ChunkParserI):
 train_sents = conll2000.chunked_sents('train.txt')
 test_sents = conll2000.chunked_sents('test.txt')
 stemmer = SnowballStemmer("english")
-f = open("vocab.txt")
+f = open("Pride and Prejudice.txt")
 sentence = f.read()
 stop = set(stopwords.words('english'))
 sentence = [i for i in sentence.split() if i not in stop]
 plurals = [stemmer.stem(sente) for sente in sentence]
-print(sentence)
-print(plurals)
+# print(sentence)
+# print(plurals)
 sentence = ' '.join(str(e) for e in sentence)
 plurals = ' '.join(str(e) for e in plurals)
-print(plurals)
+# print(plurals)
 seent = nltk.sent_tokenize(sentence)
 tagged = [nltk.word_tokenize(se) for se in seent]
 after_tag = [nltk.pos_tag(ta) for ta in tagged]
