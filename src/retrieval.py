@@ -1,6 +1,9 @@
 import nltk
+import nltk.data
+import itertools    
+from nltk.chunk.named_entity import NEChunkParserTagger,NEChunkParser
 import nltk.tag as tagger
-
+from nltk.corpus import PlaintextCorpusReader
 from nltk.corpus import conll2000
 from nltk.corpus import stopwords
 from nltk.stem.snowball import SnowballStemmer
@@ -97,10 +100,27 @@ class ConsecutiveNPChunker(nltk.ChunkParserI):
         conlltags = [(w, t, c) for ((w, t), c) in tagged_sents]
         return nltk.chunk.conlltags2tree(conlltags)
 
+class TagChunker(nltk.chunk.ChunkParserI):
+    def __init__(self, chunk_tagger):
+        self._chunk_tagger = chunk_tagger
+ 
+    def parse(self, tokens):
+        # split words and part of speech tags
+        (words, tags) = zip(*tokens)
+        # get IOB chunk tags
+        chunks = self._chunk_tagger.tag(tags)
+        # join words with chunk tags
+        wtc = itertools.izip(words, chunks)
+        # w = word, t = part-of-speech tag, c = chunk tag
+        lines = [' '.join([w, t, c]) for (w, (t, c)) in wtc if c]
+        # create tree from conll formatted chunk lines
+        return nltk.chunk.conllstr2tree('\n'.join(lines))
+
 train_sents = conll2000.chunked_sents('train.txt')
 test_sents = conll2000.chunked_sents('test.txt')
+print(train_sents)
 stemmer = SnowballStemmer("english")
-f = open("Pride and Prejudice.txt")
+f = open("As-Skies-Became-Crimson.txt")
 sentence = f.read()
 stop = set(stopwords.words('english'))
 sentence = [i for i in sentence.split() if i not in stop]
@@ -113,6 +133,8 @@ plurals = ' '.join(str(e) for e in plurals)
 seent = nltk.sent_tokenize(sentence)
 tagged = [nltk.word_tokenize(se) for se in seent]
 after_tag = [nltk.pos_tag(ta) for ta in tagged]
+chunker2 = TagChunker(NEChunkParserTagger);
+
 
 chunker = ConsecutiveNPChunker(train_sents)
 print(chunker.evaluate(test_sents))
@@ -124,4 +146,4 @@ nltk.ne_chunk(senti).draw()
 for tag in after_tag:
     tree = chunker.tagger.tag(tag)
     sentence, history = zip(*tree)
-    chunker.parse(sentence)
+    chunker2.parse(tree)
