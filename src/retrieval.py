@@ -135,15 +135,15 @@ def initialize(path):
     return res
 
 
-def getNodes(parent, label):
+def getNodes(parent):
     label_count = 0
     total_count = 0
     for node in parent:
         if type(node) is nltk.Tree:
-            if(node.label() == label):
+            if(node.label() in ['PERSON','ORGANIZATION']):
                 label_count += 1
             total_count += 1
-            getNodes(node, label)
+            getNodes(node)
 
     res = [label_count, total_count]
 
@@ -193,11 +193,9 @@ def third_criteria(sentence):
 
     label_count = 0
 
-    label = 'PERSON' 
-
     for sentences in after_tag:
         x = nltk.ne_chunk(sentences)
-        y = getNodes(x, label)
+        y = getNodes(x)
         label_count += y[0]
         total_count += y[1]
 
