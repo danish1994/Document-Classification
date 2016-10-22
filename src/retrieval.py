@@ -130,11 +130,27 @@ def initialize(path):
     sentence = ' '.join(str(e) for e in sentence)
     stemmed = ' '.join(str(e) for e in stemmed)
 
-    res = zip(sentence,stemmed)
+    res = zip(sentence, stemmed)
 
     return res
 
 
+def getNodes(parent, label):
+    label_count = 0
+    total_count = 0
+    for node in parent:
+        if type(node) is nltk.Tree:
+            if(node.label() == label):
+                label_count += 1
+            total_count += 1
+            getNodes(node, label)
+
+    res = [label_count, total_count]
+
+    return res
+
+
+# Ratio of "I", "WE" and "You" in the Document.
 def first_criteria(sentence):
     total_count = 0
 
@@ -150,6 +166,7 @@ def first_criteria(sentence):
     return int((count / total_count) * 100)
 
 
+# Ratio of Punctuation Marks in the Document.
 def second_criteria(sentence):
     total_count = 0
 
@@ -165,15 +182,30 @@ def second_criteria(sentence):
     return int((count / total_count) * 100)
 
 
+# Count of "PERSON" entity in the Document.
 def third_criteria(sentence):
     seent = nltk.sent_tokenize(sentence)
     text = nltk.Text(seent)
     tagged = [nltk.word_tokenize(se) for se in seent]
     after_tag = [nltk.pos_tag(ta) for ta in tagged]
-    # nltk.ne_chunk(after_tag[0]).draw()
-    word_tag_fd = FreqDist(after_tag[0])
+
+    total_count = 0
+
+    label_count = 0
+
+    label = 'PERSON' 
+
+    for sentences in after_tag:
+        x = nltk.ne_chunk(sentences)
+        y = getNodes(x, label)
+        label_count += y[0]
+        total_count += y[1]
+
+    # word_tag_fd = FreqDist(after_tag[0])
     # print([wt[0] for (wt, _) in word_tag_fd.most_common() if wt[1] == 'NN'])
 
+    return int((total_count / label_count) * 100)
+    
 # train_sents = conll2000.chunked_sents('train.txt')
 # test_sents = conll2000.chunked_sents('test.txt')
 # print(train_sents)
@@ -181,6 +213,12 @@ def third_criteria(sentence):
 # chunker = ConsecutiveNPChunker(train_sents)
 # print(chunker.evaluate(test_sents))
 
+# sentence, stemmed = zip(*initialize("vocab.txt"))
+# sentence, stemmed = zip(*initialize("DataSet/Fiction/Romantic/Pride-and-Prejudice.txt"))
+# sentence, stemmed = zip(*initialize("DataSet/Fiction/Drama/As-Skies-Became-Crimson.txt"))
+# sentence, stemmed = zip(*initialize("DataSet/Fiction/Drama/Huey.txt"))
+# sentence, stemmed = zip(*initialize("DataSet/Fiction/Drama/Tanya.txt"))
+# sentence, stemmed = zip(*initialize("DataSet/Fiction/Drama/The-Day-God-Came-to-Earth.txt"))
 sentence,stemmed = zip(*initialize("DataSet/Fiction/Drama/The-Diaries-of-Bunty-Danvers.txt"))
 sentence = ''.join(sentence)
 stemmed = ''.join(stemmed)
@@ -194,4 +232,5 @@ criteria_2 = second_criteria(stemmed)
 print(criteria_2)
 
 # Criteria 3
-third_criteria(sentence)
+criteria_3 = third_criteria(sentence)
+print(criteria_3)
