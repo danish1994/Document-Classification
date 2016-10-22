@@ -1,12 +1,13 @@
 import nltk
 import nltk.data
-import itertools    
+import itertools  
 from nltk.chunk.named_entity import NEChunkParserTagger,NEChunkParser
 import nltk.tag as tagger
 from nltk.corpus import PlaintextCorpusReader
 from nltk.corpus import conll2000
 from nltk.corpus import stopwords
 from nltk.stem.snowball import SnowballStemmer
+from nltk.probability import FreqDist
 
 
 class UnigramChunker(nltk.ChunkParserI):
@@ -119,31 +120,51 @@ class TagChunker(nltk.chunk.ChunkParserI):
 train_sents = conll2000.chunked_sents('train.txt')
 test_sents = conll2000.chunked_sents('test.txt')
 print(train_sents)
+
 stemmer = SnowballStemmer("english")
-f = open("As-Skies-Became-Crimson.txt")
+# f = open("DataSet/Fiction/Romantic/Pride-and-Prejudice.txt")
+f = open("vocab.txt")
 sentence = f.read()
-stop = set(stopwords.words('english'))
-sentence = [i for i in sentence.split() if i not in stop]
-plurals = [stemmer.stem(sente) for sente in sentence]
-# print(sentence)
-# print(plurals)
-sentence = ' '.join(str(e) for e in sentence)
-plurals = ' '.join(str(e) for e in plurals)
+# stop = set(stopwords.words('english'))
+# sentence = [i for i in sentence.split() if i not in stop]
+# plurals = [stemmer.stem(sente) for sente in sentence]
+# # print(sentence)
+# # print(plurals)
+# sentence = ' '.join(str(e) for e in sentence)
+# plurals = ' '.join(str(e) for e in plurals)
 # print(plurals)
 seent = nltk.sent_tokenize(sentence)
+text = nltk.Text(seent)
 tagged = [nltk.word_tokenize(se) for se in seent]
 after_tag = [nltk.pos_tag(ta) for ta in tagged]
-chunker2 = TagChunker(NEChunkParserTagger);
+# chunker2 = TagChunker(NEChunkParserTagger);
+# wsj = nltk.corpus.treebank.tagged_words(tagset='universal')
 
-
-chunker = ConsecutiveNPChunker(train_sents)
-print(chunker.evaluate(test_sents))
+# chunker = ConsecutiveNPChunker(train_sents)
+# print(chunker.evaluate(test_sents))
 
 # Testing for 1st Sentence
 senti = after_tag[0]
-nltk.ne_chunk(senti).draw()
+# nltk.ne_chunk(senti).draw()
 
-for tag in after_tag:
-    tree = chunker.tagger.tag(tag)
-    sentence, history = zip(*tree)
-    chunker2.parse(tree)
+
+fdist = FreqDist()
+for seeent in nltk.tokenize.sent_tokenize(sentence):
+    for word in nltk.tokenize.word_tokenize(seeent):
+        fdist[word] += 1
+print(fdist) 
+
+print(type(fdist))
+
+print([wt for (wt, _) in fdist.most_common() if (wt == 'I' || wt == 'we' || wt == 'you')])
+
+
+# word_tag_fd = FreqDist(after_tag[0])
+# print([wt[0] for (wt, _) in word_tag_fd.most_common() if wt[1] == 'NNP'])
+
+# print(text.dispersion_plot(['I', 'we', 'you']))
+
+# for tag in after_tag:
+#     tree = chunker.tagger.tag(tag)
+#     sentence, history = zip(*tree)
+#     chunker.parse(tree)
