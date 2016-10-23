@@ -89,7 +89,7 @@ def plot_subfigure(X, Y, title, transform):
 def classify(X, Y):
     plt.figure(figsize=(8, 6))
 
-    plot_subfigure(X, Y, "Plot Graph", "cca")
+    plot_subfigure(X, Y, "Plot Graph", "pca")
 
     plt.subplots_adjust(.07, .07, .70, .90, .09, .2)
 

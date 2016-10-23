@@ -1,13 +1,16 @@
 import nltk
 import nltk.data
 import itertools
+import os
 import nltk.tag as tagger
+import numpy as np
 from nltk.chunk.named_entity import NEChunkParserTagger, NEChunkParser
 from nltk.corpus import PlaintextCorpusReader
 from nltk.corpus import conll2000
 from nltk.corpus import stopwords
 from nltk.stem.snowball import SnowballStemmer
 from nltk.probability import FreqDist
+from classify import classify
 
 
 class UnigramChunker(nltk.ChunkParserI):
@@ -119,8 +122,39 @@ def npchunk_features(sentence, i, history):
 #             tags.add(pos)
 #     return '+'.join(sorted(tags))
 
+# Return Result of Criteria's.
+def getCriteria(path):
+    file_name = path.split("/")
+    genre = file_name[-2]
 
-def initialize(path):
+    x = np.zeros(shape=(1, 3), dtype=int)
+    y = np.zeros(shape=(1, 2), dtype=int)
+    if (genre == 'Drama'):
+        y[0] = [0, 1]
+    elif(genre == 'Romantic'):
+        y[0] = [1, 0]
+
+    sentence, stemmed = zip(
+        *getSenetence(path))
+    sentence = ''.join(sentence)
+    stemmed = ''.join(stemmed)
+
+    # Criteria 1
+    criteria_1 = first_criteria(stemmed)
+
+    # Criteria 2
+    criteria_2 = second_criteria(stemmed)
+
+    # Criteria 3
+    criteria_3 = third_criteria(sentence)
+
+    x[0] = [criteria_1, criteria_2, criteria_3]
+
+    return zip(x, y)
+
+
+# Get Senetence from File removing Stop Words and Stemming.
+def getSenetence(path):
     f = open(path)
     sentence = f.read()
     stemmer = SnowballStemmer('english')
@@ -135,15 +169,18 @@ def initialize(path):
     return res
 
 
+# Parse Through Parse Tree Nodes.
 def getNodes(parent):
     label_count = 0
     total_count = 0
     for node in parent:
         if type(node) is nltk.Tree:
-            if(node.label() in ['PERSON','ORGANIZATION']):
+            if(node.label() in ['PERSON', 'ORGANIZATION']):
                 label_count += 1
             total_count += 1
-            getNodes(node)
+            x = getNodes(node)
+            label_count += x[0]
+            total_count += x[1]
 
     res = [label_count, total_count]
 
@@ -202,8 +239,26 @@ def third_criteria(sentence):
     # word_tag_fd = FreqDist(after_tag[0])
     # print([wt[0] for (wt, _) in word_tag_fd.most_common() if wt[1] == 'NN'])
 
-    return int((total_count / label_count) * 100)
-    
+    return int((label_count / total_count) * 100)
+
+
+# Intitalizing Result Matrix for MatPlot.
+matrix_x = np.zeros(shape=(0, 3), dtype=int)
+matrix_y = np.zeros(shape=(0, 2), dtype=int)
+
+rootdir = os.getcwd() + '/DataSet'
+for subdir, dirs, files in os.walk(rootdir):
+    for file in files:
+        path = os.path.join(subdir, file)
+
+        x, y = zip(*getCriteria(path))
+
+        matrix_x = np.concatenate((matrix_x, x), axis=0)
+        matrix_y = np.concatenate((matrix_y, y), axis=0)
+
+classify(matrix_x, matrix_y)
+
+
 # train_sents = conll2000.chunked_sents('train.txt')
 # test_sents = conll2000.chunked_sents('test.txt')
 # print(train_sents)
@@ -211,24 +266,9 @@ def third_criteria(sentence):
 # chunker = ConsecutiveNPChunker(train_sents)
 # print(chunker.evaluate(test_sents))
 
-# sentence, stemmed = zip(*initialize("vocab.txt"))
-# sentence, stemmed = zip(*initialize("DataSet/Fiction/Romantic/Pride-and-Prejudice.txt"))
-sentence, stemmed = zip(*initialize("DataSet/Fiction/Drama/As-Skies-Became-Crimson.txt"))
-# sentence, stemmed = zip(*initialize("DataSet/Fiction/Drama/Huey.txt"))
-# sentence, stemmed = zip(*initialize("DataSet/Fiction/Drama/Tanya.txt"))
-# sentence, stemmed = zip(*initialize("DataSet/Fiction/Drama/The-Day-God-Came-to-Earth.txt"))
-# sentence,stemmed = zip(*initialize("DataSet/Fiction/Drama/The-Diaries-of-Bunty-Danvers.txt"))
-sentence = ''.join(sentence)
-stemmed = ''.join(stemmed)
-
-# Criteria 1
-criteria_1 = first_criteria(stemmed)
-print(criteria_1)
-
-# Criteria 2
-criteria_2 = second_criteria(stemmed)
-print(criteria_2)
-
-# Criteria 3
-criteria_3 = third_criteria(sentence)
-print(criteria_3)
+# matrix = np.zeros(shape=(0,3),dtype = int)
+# print(matrix)
+# m2 = np.ndarray(shape=(5,3),dtype=int)
+# print(m2)
+# m2 = np.concatenate((matrix, m2), axis=0)
+# print(m2)
