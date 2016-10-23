@@ -16,15 +16,18 @@ def get_criteria(path):
     print(file_name[-1])
 
     x = np.zeros(shape=(1, 3), dtype=int)
-    y = np.zeros(shape=(1, 3), dtype=int)
+    y = np.zeros(shape=(1, 4), dtype=int)
+
     if (genre == 'Drama'):
-        y[0] = [1, 0, 0]
+        y[0] = [1, 0, 0, 0]
     elif(genre == 'Romantic'):
-        y[0] = [0, 1, 0]
+        y[0] = [0, 1, 0, 0]
     elif(genre == 'Thriller'):
-        y[0] = [0, 0, 1]
+        y[0] = [0, 0, 1, 0]
+    elif(genre == 'Fairy Tales'):
+        y[0] = [0, 0, 0, 1]
     else:
-        y[0] = [0, 0, 0]
+        y[0] = [0, 0, 0, 0]
 
     sentence, stemmed = zip(
         *get_sentence(path))
@@ -39,6 +42,9 @@ def get_criteria(path):
 
     # Criteria 3
     criteria_3 = third_criteria(sentence) / 10
+
+    # Criteria 4
+    # criteria_4 = fourth_criteria(stemmed)
 
     x[0] = [criteria_1, criteria_2, criteria_3]
 
@@ -132,3 +138,15 @@ def third_criteria(sentence):
         total_count += y[1]
 
     return int((label_count / total_count) * 100)
+
+
+# Total Word Count
+def fourth_criteria(sentence):
+
+    total_count = 0
+
+    for seeent in nltk.tokenize.sent_tokenize(sentence):
+        for word in nltk.tokenize.word_tokenize(seeent):
+            total_count += 1
+
+    return total_count

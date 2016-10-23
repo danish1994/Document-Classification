@@ -5,7 +5,7 @@ from classify import save_to_file
 
 # Intitalizing Result Matrix for MatPlot.
 matrix_x = np.zeros(shape=(0, 3), dtype=int)
-matrix_y = np.zeros(shape=(0, 3), dtype=int)
+matrix_y = np.zeros(shape=(0, 4), dtype=int)
 
 # Iterating Through DataSets
 rootdir = os.getcwd() + '/DataSet'
