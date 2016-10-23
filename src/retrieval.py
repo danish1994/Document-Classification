@@ -202,7 +202,7 @@ def third_criteria(sentence):
     # word_tag_fd = FreqDist(after_tag[0])
     # print([wt[0] for (wt, _) in word_tag_fd.most_common() if wt[1] == 'NN'])
 
-    return int((total_count / label_count) * 100)
+    return int((lotal_count / tobel_count) * 100)
     
 # train_sents = conll2000.chunked_sents('train.txt')
 # test_sents = conll2000.chunked_sents('test.txt')
@@ -213,11 +213,11 @@ def third_criteria(sentence):
 
 # sentence, stemmed = zip(*initialize("vocab.txt"))
 # sentence, stemmed = zip(*initialize("DataSet/Fiction/Romantic/Pride-and-Prejudice.txt"))
-# sentence, stemmed = zip(*initialize("DataSet/Fiction/Drama/As-Skies-Became-Crimson.txt"))
+sentence, stemmed = zip(*initialize("DataSet/Fiction/Drama/As-Skies-Became-Crimson.txt"))
 # sentence, stemmed = zip(*initialize("DataSet/Fiction/Drama/Huey.txt"))
 # sentence, stemmed = zip(*initialize("DataSet/Fiction/Drama/Tanya.txt"))
 # sentence, stemmed = zip(*initialize("DataSet/Fiction/Drama/The-Day-God-Came-to-Earth.txt"))
-sentence,stemmed = zip(*initialize("DataSet/Fiction/Drama/The-Diaries-of-Bunty-Danvers.txt"))
+# sentence,stemmed = zip(*initialize("DataSet/Fiction/Drama/The-Diaries-of-Bunty-Danvers.txt"))
 sentence = ''.join(sentence)
 stemmed = ''.join(stemmed)
 
