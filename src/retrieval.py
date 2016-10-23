@@ -261,7 +261,45 @@ for subdir, dirs, files in os.walk(rootdir):
         matrix_x = np.concatenate((matrix_x, x), axis=0)
         matrix_y = np.concatenate((matrix_y, y), axis=0)
 
-classify(matrix_x, matrix_y)
+#classify(matrix_x, matrix_y)
+
+train_sents = conll2000.chunked_sents('train.txt')
+test_sents = conll2000.chunked_sents('test.txt')
+# stemmer = SnowballStemmer("english")
+f = open("vocab.txt")
+f1 = open("finalVocab.txt","w")
+sentence = f.read()
+stop = set(stopwords.words('english'))
+sentence = [i for i in sentence.split() if i not in stop]
+# plurals = [stemmer.stem(sente) for sente in sentence]
+print(sentence)
+# print(plurals)
+sentence = ' '.join(str(e) for e in sentence)
+# plurals = ' '.join(str(e) for e in plurals)
+# print(plurals)
+seent = nltk.sent_tokenize(sentence)
+tagged = [nltk.word_tokenize(se) for se in seent]
+after_tag = [nltk.pos_tag(ta) for ta in tagged]
+
+chunker = ConsecutiveNPChunker(train_sents)
+print(chunker.evaluate(test_sents))
+
+senti = after_tag[0]
+print(nltk.ne_chunk(senti).draw())
+
+for tag in after_tag:
+    tree = chunker.tagger.tag(tag)
+    sentence, history= zip(*tree)
+    for i,j in zip(sentence,history):
+        print(i[0],i[1],j)
+        s = i[0]+' '+i[1]+' '+j
+        f1.write(s+"\n")
+    chunker.parse(sentence)
+
+# sentence = ' '.join(str(e) for e in sentence)
+#stemmed = ' '.join(str(e) for e in stemmed)
+
+# sentence,stemmed = zip(*getSenetence('vocab.txt'))
 
 
 # train_sents = conll2000.chunked_sents('train.txt')
