@@ -150,6 +150,9 @@ def getCriteria(path):
 
     x[0] = [criteria_1, criteria_2, criteria_3]
 
+    print(x[0])
+    print(y[0])
+
     return zip(x, y)
 
 
@@ -265,10 +268,3 @@ classify(matrix_x, matrix_y)
 
 # chunker = ConsecutiveNPChunker(train_sents)
 # print(chunker.evaluate(test_sents))
-
-# matrix = np.zeros(shape=(0,3),dtype = int)
-# print(matrix)
-# m2 = np.ndarray(shape=(5,3),dtype=int)
-# print(m2)
-# m2 = np.concatenate((matrix, m2), axis=0)
-# print(m2)
