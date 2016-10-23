@@ -8,6 +8,17 @@ from nltk.corpus import stopwords
 from nltk.probability import FreqDist
 
 
+# Get Class
+def get_class(x):
+    colors = {
+        'Drama': [1, 0, 0, 0],
+        'Fairy Tales': [0, 1, 0, 0],
+        'Romantic': [0, 0, 1, 0],
+        'Thriller': [0, 0, 0, 1]
+    }
+    return colors.get(x, [0, 0, 0, 0])
+
+
 # Return Result of Criteria's.
 def get_criteria(path):
     file_name = path.split("/")
@@ -18,16 +29,7 @@ def get_criteria(path):
     x = np.zeros(shape=(1, 3), dtype=int)
     y = np.zeros(shape=(1, 4), dtype=int)
 
-    if (genre == 'Drama'):
-        y[0] = [1, 0, 0, 0]
-    elif(genre == 'Romantic'):
-        y[0] = [0, 1, 0, 0]
-    elif(genre == 'Thriller'):
-        y[0] = [0, 0, 1, 0]
-    elif(genre == 'Fairy Tales'):
-        y[0] = [0, 0, 0, 1]
-    else:
-        y[0] = [0, 0, 0, 0]
+    y[0] = get_class(genre)
 
     sentence, stemmed = zip(
         *get_sentence(path))
