@@ -133,6 +133,8 @@ def getCriteria(path):
         y[0] = [0, 1]
     elif(genre == 'Romantic'):
         y[0] = [1, 0]
+    else:
+        y[0] = [0, 0]
 
     sentence, stemmed = zip(
         *getSenetence(path))
