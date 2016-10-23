@@ -11,6 +11,7 @@ from numpy import ones, vstack
 from numpy.linalg import lstsq
 
 
+# Get Equation of Line.
 def get_line_equation(x1, y1, x2, y2):
     points = [(x1, y1), (x2, y2)]
     x_coords, y_coords = zip(*points)
@@ -20,6 +21,7 @@ def get_line_equation(x1, y1, x2, y2):
         "Line Solution is y = {m}x + {c}".format(m=round(m, 2), c=round(c, 2)))
 
 
+# PLot the HyperPlane Classifying the Data.
 def plot_hyperplane(clf, min_x, max_x, linestyle, label):
     w = clf.coef_[0]
     a = -w[0] / w[1]
@@ -29,6 +31,7 @@ def plot_hyperplane(clf, min_x, max_x, linestyle, label):
     plt.plot(xx, yy, linestyle, label=label)
 
 
+# Colour of the Point.
 def plot_color(i):
     colors = {
         0: 'b',
@@ -39,6 +42,7 @@ def plot_color(i):
     return colors.get(i, 'b')
 
 
+# Style of the HyperPlane.
 def plot_marker(i):
     colors = {
         0: 'k-',
@@ -49,6 +53,7 @@ def plot_marker(i):
     return colors.get(i, 'k-')
 
 
+# Plot Subfigure.
 def plot_subfigure(X, Y, title, transform):
     if transform == "pca":
         X = PCA(n_components=2).fit_transform(X)
@@ -86,6 +91,7 @@ def plot_subfigure(X, Y, title, transform):
     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 
 
+# Intialize Classification
 def classify(X, Y):
     plt.figure(figsize=(8, 6))
 
@@ -96,6 +102,7 @@ def classify(X, Y):
     plt.show()
 
 
+# Read Training Data from File.
 def read_from_file(path):
     f = open(path)
     content = f.read().split('\n')
@@ -116,4 +123,26 @@ def read_from_file(path):
         temp[0] = [int(s) for s in a.split(',')]
         matrix_y = np.concatenate((matrix_y, temp), axis=0)
 
-    classify(matrix_x,matrix_y)
+    classify(matrix_x, matrix_y)
+
+
+# Save Training Result to File.
+def save_to_file(matrix_x, matrix_y):
+    matrix_x_str = ''
+    for a in matrix_x:
+        matrix_x_str += ','.join(str(e) for e in a)
+        matrix_x_str += '|'
+
+    matrix_y_str = ''
+    for a in matrix_y:
+        matrix_y_str += ','.join(str(e) for e in a)
+        matrix_y_str += '|'
+
+    matrix_x_str = matrix_x_str[:-1]
+    matrix_y_str = matrix_y_str[:-1]
+
+    final_str = str(matrix_x.shape[
+                    1]) + '\n' + str(matrix_y.shape[1]) + '\n' + matrix_x_str + '\n' + matrix_y_str
+
+    f = open('trained_set.txt', 'w')
+    f.write(final_str)
