@@ -94,3 +94,26 @@ def classify(X, Y):
     plt.subplots_adjust(.07, .07, .70, .90, .09, .2)
 
     plt.show()
+
+
+def read_from_file(path):
+    f = open(path)
+    content = f.read().split('\n')
+
+    x_shape = int(content[0])
+    y_shape = int(content[1])
+
+    matrix_x = np.zeros(shape=(0, x_shape), dtype=int)
+    matrix_y = np.zeros(shape=(0, y_shape), dtype=int)
+
+    for a in content[2].split('|'):
+        temp = np.ndarray(shape=(1, x_shape), dtype=int)
+        temp[0] = [int(s) for s in a.split(',')]
+        matrix_x = np.concatenate((matrix_x, temp), axis=0)
+
+    for a in content[3].split('|'):
+        temp = np.ndarray(shape=(1, y_shape), dtype=int)
+        temp[0] = [int(s) for s in a.split(',')]
+        matrix_y = np.concatenate((matrix_y, temp), axis=0)
+
+    classify(matrix_x,matrix_y)

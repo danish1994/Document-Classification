@@ -123,21 +123,25 @@ def npchunk_features(sentence, i, history):
 #     return '+'.join(sorted(tags))
 
 # Return Result of Criteria's.
-def getCriteria(path):
+def get_criteria(path):
     file_name = path.split("/")
     genre = file_name[-2]
 
+    print(file_name[-1])
+
     x = np.zeros(shape=(1, 3), dtype=int)
-    y = np.zeros(shape=(1, 2), dtype=int)
+    y = np.zeros(shape=(1, 3), dtype=int)
     if (genre == 'Drama'):
-        y[0] = [0, 1]
+        y[0] = [1, 0, 0]
     elif(genre == 'Romantic'):
-        y[0] = [1, 0]
+        y[0] = [0, 1, 0]
+    elif(genre == 'Thriller'):
+        y[0] = [0, 0, 1]
     else:
-        y[0] = [0, 0]
+        y[0] = [0, 0, 0]
 
     sentence, stemmed = zip(
-        *getSenetence(path))
+        *get_sentence(path))
     sentence = ''.join(sentence)
     stemmed = ''.join(stemmed)
 
@@ -148,7 +152,7 @@ def getCriteria(path):
     criteria_2 = second_criteria(stemmed)
 
     # Criteria 3
-    criteria_3 = third_criteria(sentence)
+    criteria_3 = third_criteria(sentence)/10
 
     x[0] = [criteria_1, criteria_2, criteria_3]
 
@@ -159,7 +163,7 @@ def getCriteria(path):
 
 
 # Get Senetence from File removing Stop Words and Stemming.
-def getSenetence(path):
+def get_sentence(path):
     f = open(path)
     sentence = f.read()
     stemmer = SnowballStemmer('english')
@@ -241,70 +245,38 @@ def third_criteria(sentence):
         label_count += y[0]
         total_count += y[1]
 
-    # word_tag_fd = FreqDist(after_tag[0])
-    # print([wt[0] for (wt, _) in word_tag_fd.most_common() if wt[1] == 'NN'])
-
     return int((label_count / total_count) * 100)
-
-
-# Intitalizing Result Matrix for MatPlot.
-matrix_x = np.zeros(shape=(0, 3), dtype=int)
-matrix_y = np.zeros(shape=(0, 2), dtype=int)
-
-rootdir = os.getcwd() + '/DataSet'
-for subdir, dirs, files in os.walk(rootdir):
-    for file in files:
-        path = os.path.join(subdir, file)
-
-        x, y = zip(*getCriteria(path))
-
-        matrix_x = np.concatenate((matrix_x, x), axis=0)
-        matrix_y = np.concatenate((matrix_y, y), axis=0)
-
-#classify(matrix_x, matrix_y)
-
-train_sents = conll2000.chunked_sents('train.txt')
-test_sents = conll2000.chunked_sents('test.txt')
-# stemmer = SnowballStemmer("english")
-f = open("vocab.txt")
-f1 = open("finalVocab.txt","w")
-sentence = f.read()
-stop = set(stopwords.words('english'))
-sentence = [i for i in sentence.split() if i not in stop]
-# plurals = [stemmer.stem(sente) for sente in sentence]
-print(sentence)
-# print(plurals)
-sentence = ' '.join(str(e) for e in sentence)
-# plurals = ' '.join(str(e) for e in plurals)
-# print(plurals)
-seent = nltk.sent_tokenize(sentence)
-tagged = [nltk.word_tokenize(se) for se in seent]
-after_tag = [nltk.pos_tag(ta) for ta in tagged]
-
-chunker = ConsecutiveNPChunker(train_sents)
-print(chunker.evaluate(test_sents))
-
-senti = after_tag[0]
-print(nltk.ne_chunk(senti).draw())
-
-for tag in after_tag:
-    tree = chunker.tagger.tag(tag)
-    sentence, history= zip(*tree)
-    for i,j in zip(sentence,history):
-        print(i[0],i[1],j)
-        s = i[0]+' '+i[1]+' '+j
-        f1.write(s+"\n")
-    chunker.parse(sentence)
-
-# sentence = ' '.join(str(e) for e in sentence)
-#stemmed = ' '.join(str(e) for e in stemmed)
-
-# sentence,stemmed = zip(*getSenetence('vocab.txt'))
 
 
 # train_sents = conll2000.chunked_sents('train.txt')
 # test_sents = conll2000.chunked_sents('test.txt')
-# print(train_sents)
+# # stemmer = SnowballStemmer("english")
+# f = open("vocab.txt")
+# f1 = open("finalVocab.txt","w")
+# sentence = f.read()
+# stop = set(stopwords.words('english'))
+# sentence = [i for i in sentence.split() if i not in stop]
+# # plurals = [stemmer.stem(sente) for sente in sentence]
+# print(sentence)
+# # print(plurals)
+# sentence = ' '.join(str(e) for e in sentence)
+# # plurals = ' '.join(str(e) for e in plurals)
+# # print(plurals)
+# seent = nltk.sent_tokenize(sentence)
+# tagged = [nltk.word_tokenize(se) for se in seent]
+# after_tag = [nltk.pos_tag(ta) for ta in tagged]
 
 # chunker = ConsecutiveNPChunker(train_sents)
 # print(chunker.evaluate(test_sents))
+
+# senti = after_tag[0]
+# print(nltk.ne_chunk(senti).draw())
+
+# for tag in after_tag:
+#     tree = chunker.tagger.tag(tag)
+#     sentence, history= zip(*tree)
+#     for i,j in zip(sentence,history):
+#         print(i[0],i[1],j)
+#         s = i[0]+' '+i[1]+' '+j
+#         f1.write(s+"\n")
+#     chunker.parse(sentence)

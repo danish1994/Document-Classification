@@ -1,7 +1,7 @@
 import numpy as np
 import nltk
 
-from classify import classify
+from classify import read_from_file
 
 X = np.array([
     [4, 3],
@@ -30,7 +30,9 @@ Y = np.array([
     [1, 0, 0, 0],
     [0, 1, 0, 0],
     [0, 0, 1, 0],
-    [0, 0, 0, 1] 
+    [0, 0, 0, 1]
 ], np.int32)
 
-classify(X, Y)
+read_from_file('trained_set.txt')
+
+# classify(X, Y)
