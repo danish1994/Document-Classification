@@ -19,7 +19,7 @@ def get_line_equation(x1, y1, x2, y2):
     x_coords, y_coords = zip(*points)
     A = vstack([x_coords, ones(len(x_coords))]).T
     m, c = lstsq(A, y_coords)[0]
-    print("Line Solution is y = {m}x + {c}".format(m=round(m, 2), c=round(c, 2)))
+    # print("Line Solution is y = {m}x + {c}".format(m=round(m, 2), c=round(c, 2)))
 
 
 # PLot the HyperPlane Classifying the Data.
@@ -76,8 +76,10 @@ def plot_subfigure(X, Y, title, transform, genres):
 
     width = Y.shape[1]
 
-    if(Y[-1][0] == 0 or Y[-1][1] == 0 or Y[-1][2] == 0):
-        get_genre(X, Y, genres)
+    # Get The Genre
+    if(Y[-1][0] == 0 and Y[-1][1] == 0 and Y[-1][2] == 0):
+        genre = get_genre(X, Y, genres)
+        print(genre)
 
     for i in range(0, width):
         try:
@@ -111,7 +113,7 @@ def classify(X, Y):
             genres = dirs
             break
 
-    plt.figure(figsize=(8, 6))
+    plt.figure(figsize=(10, 6))
 
     plot_subfigure(X, Y, "Plot Graph", "cca", genres)
 
@@ -214,8 +216,8 @@ def get_genre(X, Y, genres):
 
         distances.append(sum / len(x_genre))
 
-
     i = distances.index(min(distances))
-    plt.scatter(X[:, 0], X[:, 1], s=80, c='gray',label='Result - ' + genres[i])
+    plt.scatter(X[:, 0], X[:, 1], s=80, c='gray',
+                label='Result - ' + genres[i])
 
     return genres[i]

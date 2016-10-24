@@ -41,8 +41,12 @@ def get_X(path):
     # Criteria 6
     criteria_6 = sixth_criteria(total_count, fdist)
 
+    # Criteria 7
+    criteria_7 = seventh_criteria(total_count, fdist)
+
     x = np.zeros(shape=(1, 6), dtype=int)
-    x[0] = [criteria_1, criteria_2, criteria_3, criteria_4, criteria_5, criteria_6]
+    x[0] = [criteria_1, criteria_2, criteria_3,
+            criteria_4, criteria_5, criteria_6]
 
     return x
 
@@ -178,3 +182,10 @@ def sixth_criteria(total_count, fdist):
 
     count = get_word_count(fdist, 'Criteria/Romantic.txt')
     return int((count / total_count) * 1000)
+
+
+# Count Words Present in Drama
+def seventh_criteria(total_count, fdist):
+
+    count = get_word_count(fdist, 'Criteria/Drama.txt')
+    return int((count / total_count) * 10000)
