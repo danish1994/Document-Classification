@@ -1,4 +1,5 @@
 import os
+import math
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -76,23 +77,18 @@ def plot_subfigure(X, Y, title, transform, genres):
 
     width = Y.shape[1]
 
-    plt.scatter(X[:, 0], X[:, 1], s=80, c='gray', label='Unclassified')
-
-    print(X[:, 0][-1])
-    print(X[:, 1][-1])
-
     if(Y[-1][0] == 0 or Y[-1][1] == 0 or Y[-1][2] == 0):
-        print('hello')
+        return_genre(X, Y, genres)
 
     for i in range(0, width):
         try:
             plt.scatter(X[np.where(Y[:, i]), 0], X[np.where(
-                Y[:, i] == 1), 1], s=80, c=plot_color(i), label=genres[i])
+                Y[:, i]), 1], s=80, c=plot_color(i), label=genres[i])
             plot_hyperplane(classif.estimators_[i], min_x, max_x, plot_marker(
                 i), 'Boundary\nfor ' + genres[i])
         except:
             plt.scatter(X[np.where(Y[:, i]), 0], X[np.where(
-                Y[:, i] == 1), 1], s=80, c=plot_color(i), label='Class ' + str(i))
+                Y[:, i]), 1], s=80, c=plot_color(i), label='Class ' + str(i))
             plot_hyperplane(classif.estimators_[i], min_x, max_x, plot_marker(
                 i), 'Boundary\nfor Class ' + str(i))
 
@@ -200,3 +196,27 @@ def test_data(x):
     matrix_y = np.concatenate((matrix_y, y), axis=0)
 
     classify(matrix_x, matrix_y)
+
+
+# Define Genre of Test Data
+def return_genre(X, Y, genres):
+    x_test = X[:, 0][-1]
+    y_test = X[:, 1][-1]
+
+    distances = []
+
+    for i in range(0, len(genres)):
+        x_genre = X[np.where(Y[:, i]), 0][0]
+        y_genre = X[np.where(Y[:, i]), 1][0]
+
+        sum = 0
+        for j in range(0, len(x_genre)):
+            sum += math.hypot(x_genre[j] - x_test, y_genre[j] - y_test)
+
+        distances.append(sum / len(x_genre))
+
+        i = distances.index(min(distances))
+        plt.scatter(X[:, 0], X[:, 1], s=80, c='gray',
+                    label='Result - ' + genres[i])
+
+        return genres[i]
