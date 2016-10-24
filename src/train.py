@@ -15,7 +15,7 @@ for subdir, dirs, files in os.walk(rootdir):
 
 
 # Intitalizing Result Matrix for MatPlot.
-matrix_x = np.zeros(shape=(0, 3), dtype=int)
+matrix_x = np.zeros(shape=(0, 4), dtype=int)
 matrix_y = np.zeros(shape=(0, len(genres)), dtype=int)
 
 

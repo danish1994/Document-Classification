@@ -15,7 +15,7 @@ def get_criteria(path, genres):
     genre = file_name[-2]
     genre_number = genres.index(genre)
 
-    x = np.zeros(shape=(1, 3), dtype=int)
+    x = np.zeros(shape=(1, 4), dtype=int)
     y = np.zeros(shape=(1, len(genres)), dtype=int)
 
     y[0][genre_number] = 1
@@ -27,19 +27,27 @@ def get_criteria(path, genres):
     sentence = ''.join(sentence)
     stemmed = ''.join(stemmed)
 
+    # Defining Counts
+    total_count = 0
+    fdist = FreqDist()
+    for seeent in nltk.tokenize.sent_tokenize(stemmed):
+        for word in nltk.tokenize.word_tokenize(seeent):
+            fdist[word] += 1
+            total_count += 1
+
     # Criteria 1
-    criteria_1 = first_criteria(stemmed)
+    criteria_1 = first_criteria(total_count, fdist)
 
     # Criteria 2
-    criteria_2 = second_criteria(stemmed)
+    criteria_2 = second_criteria(total_count, fdist)
 
     # Criteria 3
     criteria_3 = third_criteria(sentence) / 10
 
     # Criteria 4
-    # criteria_4 = fourth_criteria(stemmed)
+    criteria_4 = fourth_criteria(total_count)
 
-    x[0] = [criteria_1, criteria_2, criteria_3]
+    x[0] = [criteria_1, criteria_2, criteria_3, criteria_4]
 
     print(x[0])
     print(y[0])
@@ -82,31 +90,15 @@ def getNodes(parent):
 
 
 # Ratio of "I", "WE" and "You" in the Document.
-def first_criteria(sentence):
-    total_count = 0
-
-    fdist = FreqDist()
-    for seeent in nltk.tokenize.sent_tokenize(sentence):
-        for word in nltk.tokenize.word_tokenize(seeent):
-            fdist[word] += 1
-            total_count += 1
-
+def first_criteria(total_count, fdist):
     count = fdist['i'] + fdist['I'] + fdist['we'] + \
         fdist['We'] + fdist['you'] + fdist['You']
 
-    return int((count / total_count) * 1000)
+    return int((count / total_count) * 100)
 
 
 # Ratio of Punctuation Marks in the Document.
-def second_criteria(sentence):
-    total_count = 0
-
-    fdist = FreqDist()
-    for seeent in nltk.tokenize.sent_tokenize(sentence):
-        for word in nltk.tokenize.word_tokenize(seeent):
-            fdist[word] += 1
-            total_count += 1
-
+def second_criteria(total_count, fdist):
     count = fdist["'"] + fdist[':'] + fdist[','] + fdist['-'] + fdist['...'] + \
         fdist['!'] + fdist['.'] + fdist['?'] + fdist['"'] + fdist[';']
 
@@ -134,12 +126,5 @@ def third_criteria(sentence):
 
 
 # Total Word Count
-def fourth_criteria(sentence):
-
-    total_count = 0
-
-    for seeent in nltk.tokenize.sent_tokenize(sentence):
-        for word in nltk.tokenize.word_tokenize(seeent):
-            total_count += 1
-
+def fourth_criteria(total_count):
     return total_count / 1000
