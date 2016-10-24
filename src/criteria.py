@@ -16,7 +16,7 @@ def get_criteria(path, genres):
     genre_number = genres.index(genre)
 
     x = np.zeros(shape=(1, 3), dtype=int)
-    y = np.zeros(shape=(1, 4), dtype=int)
+    y = np.zeros(shape=(1, len(genres)), dtype=int)
 
     y[0][genre_number] = 1
 

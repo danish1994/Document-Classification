@@ -5,18 +5,19 @@ from classify import classify
 from classify import save_to_file
 
 
-# Intitalizing Result Matrix for MatPlot.
-matrix_x = np.zeros(shape=(0, 3), dtype=int)
-matrix_y = np.zeros(shape=(0, 4), dtype=int)
-
-
 # Generate List of Genres
 genres = []
 rootdir = os.getcwd() + '/DataSet'
 for subdir, dirs, files in os.walk(rootdir):
     if len(dirs) > 1:
-    	genres = dirs
-    	break
+        genres = dirs
+        break
+
+
+# Intitalizing Result Matrix for MatPlot.
+matrix_x = np.zeros(shape=(0, 3), dtype=int)
+matrix_y = np.zeros(shape=(0, len(genres)), dtype=int)
+
 
 # Iterating Through DataSets
 rootdir = os.getcwd() + '/DataSet'
