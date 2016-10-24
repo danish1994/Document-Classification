@@ -78,6 +78,12 @@ def plot_subfigure(X, Y, title, transform, genres):
 
     plt.scatter(X[:, 0], X[:, 1], s=80, c='gray', label='Unclassified')
 
+    print(X[:, 0][-1])
+    print(X[:, 1][-1])
+
+    if(Y[-1][0] == 0 or Y[-1][1] == 0 or Y[-1][2] == 0):
+        print('hello')
+
     for i in range(0, width):
         try:
             plt.scatter(X[np.where(Y[:, i]), 0], X[np.where(
@@ -119,26 +125,41 @@ def classify(X, Y):
     plt.show()
 
 
-# Read Training Data from File.
-def read_from_file():
-    f = open('trained_set.txt')
-    content = f.read().split('\n')
-
+# Get Matrix X
+def get_X(content):
     x_shape = int(content[0])
-    y_shape = int(content[1])
 
     matrix_x = np.zeros(shape=(0, x_shape), dtype=int)
-    matrix_y = np.zeros(shape=(0, y_shape), dtype=int)
 
     for a in content[2].split('|'):
         temp = np.ndarray(shape=(1, x_shape), dtype=int)
         temp[0] = [int(s) for s in a.split(',')]
         matrix_x = np.concatenate((matrix_x, temp), axis=0)
 
+    return matrix_x
+
+
+# Get Matrix Y
+def get_Y(content):
+    y_shape = int(content[1])
+
+    matrix_y = np.zeros(shape=(0, y_shape), dtype=int)
+
     for a in content[3].split('|'):
         temp = np.ndarray(shape=(1, y_shape), dtype=int)
         temp[0] = [int(s) for s in a.split(',')]
         matrix_y = np.concatenate((matrix_y, temp), axis=0)
+
+    return matrix_y
+
+
+# Read Training Data from File.
+def read_from_file():
+    f = open('trained_set.txt')
+    content = f.read().split('\n')
+
+    matrix_x = get_X(content)
+    matrix_y = get_Y(content)
 
     classify(matrix_x, matrix_y)
 
@@ -170,23 +191,10 @@ def test_data(x):
     f = open('trained_set.txt')
     content = f.read().split('\n')
 
-    x_shape = int(content[0])
-    y_shape = int(content[1])
+    matrix_x = get_X(content)
+    matrix_y = get_Y(content)
 
-    matrix_x = np.zeros(shape=(0, x_shape), dtype=int)
-    matrix_y = np.zeros(shape=(0, y_shape), dtype=int)
-
-    for a in content[2].split('|'):
-        temp = np.ndarray(shape=(1, x_shape), dtype=int)
-        temp[0] = [int(s) for s in a.split(',')]
-        matrix_x = np.concatenate((matrix_x, temp), axis=0)
-
-    for a in content[3].split('|'):
-        temp = np.ndarray(shape=(1, y_shape), dtype=int)
-        temp[0] = [int(s) for s in a.split(',')]
-        matrix_y = np.concatenate((matrix_y, temp), axis=0)
-
-    y = np.zeros(shape=(1, y_shape), dtype=int)
+    y = np.zeros(shape=(1, int(content[1])), dtype=int)
 
     matrix_x = np.concatenate((matrix_x, x), axis=0)
     matrix_y = np.concatenate((matrix_y, y), axis=0)
