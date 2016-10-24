@@ -8,28 +8,19 @@ from nltk.corpus import stopwords
 from nltk.probability import FreqDist
 
 
-# Get Class
-def get_class(x):
-    colors = {
-        'Drama': [1, 0, 0, 0],
-        'Fairy Tales': [0, 1, 0, 0],
-        'Romantic': [0, 0, 1, 0],
-        'Thriller': [0, 0, 0, 1]
-    }
-    return colors.get(x, [0, 0, 0, 0])
-
-
 # Return Result of Criteria's.
-def get_criteria(path):
+def get_criteria(path, genres):
     file_name = path.split("/")
-    genre = file_name[-2]
 
-    print(file_name[-1])
+    genre = file_name[-2]
+    genre_number = genres.index(genre)
 
     x = np.zeros(shape=(1, 3), dtype=int)
     y = np.zeros(shape=(1, 4), dtype=int)
 
-    y[0] = get_class(genre)
+    y[0][genre_number] = 1
+
+    print(file_name[-1])
 
     sentence, stemmed = zip(
         *get_sentence(path))
@@ -78,7 +69,7 @@ def getNodes(parent):
     total_count = 0
     for node in parent:
         if type(node) is nltk.Tree:
-            if(node.label() in ['PERSON', 'ORGANIZATION']):
+            if(node.label() in ['PERSON']):
                 label_count += 1
             total_count += 1
             x = getNodes(node)
@@ -103,7 +94,7 @@ def first_criteria(sentence):
     count = fdist['i'] + fdist['I'] + fdist['we'] + \
         fdist['We'] + fdist['you'] + fdist['You']
 
-    return int((count / total_count) * 100)
+    return int((count / total_count) * 1000)
 
 
 # Ratio of Punctuation Marks in the Document.
@@ -151,4 +142,4 @@ def fourth_criteria(sentence):
         for word in nltk.tokenize.word_tokenize(seeent):
             total_count += 1
 
-    return total_count
+    return total_count / 1000

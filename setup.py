@@ -18,5 +18,6 @@ setup(name='Document Classification',
           'python-dateutil',
           'pyparsing',
           'pytz',
-          'cycler'
+          'cycler',
+          'lda'
       ])
