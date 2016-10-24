@@ -19,8 +19,7 @@ def get_line_equation(x1, y1, x2, y2):
     x_coords, y_coords = zip(*points)
     A = vstack([x_coords, ones(len(x_coords))]).T
     m, c = lstsq(A, y_coords)[0]
-    print(
-        "Line Solution is y = {m}x + {c}".format(m=round(m, 2), c=round(c, 2)))
+    print("Line Solution is y = {m}x + {c}".format(m=round(m, 2), c=round(c, 2)))
 
 
 # PLot the HyperPlane Classifying the Data.
@@ -215,8 +214,8 @@ def get_genre(X, Y, genres):
 
         distances.append(sum / len(x_genre))
 
-        i = distances.index(min(distances))
-        plt.scatter(X[:, 0], X[:, 1], s=80, c='gray',
-                    label='Result - ' + genres[i])
 
-        return genres[i]
+    i = distances.index(min(distances))
+    plt.scatter(X[:, 0], X[:, 1], s=80, c='gray',label='Result - ' + genres[i])
+
+    return genres[i]
