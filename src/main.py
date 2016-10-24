@@ -4,6 +4,7 @@ import nltk
 from classify import read_from_file
 from classify import classify
 from classify import test_data
+from criteria import get_X
 
 X = np.array([
     [4, 3],
@@ -35,10 +36,9 @@ Y = np.array([
     [0, 0, 0, 0]
 ], np.int32)
 
-test_x = np.zeros(shape=(1, 6), dtype=int)
-test_x[0] = [0, 20, 1, 6, 0,19]
+# x = get_X('DataSet/Fiction/Romantic/A-Walk-to-Remember.txt')
 
-# test_data(test_x)
+# test_data(x)
 
 read_from_file()
 # classify(X, Y)

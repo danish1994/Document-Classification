@@ -8,22 +8,8 @@ from nltk.corpus import stopwords
 from nltk.probability import FreqDist
 
 
-# Return Result of Criteria's.
-def get_criteria(path, genres):
-    file_name = path.split("/")
-
-    genre = file_name[-2]
-    genre_number = genres.index(genre)
-
-    print(genre)
-
-    x = np.zeros(shape=(1, 6), dtype=int)
-    y = np.zeros(shape=(1, len(genres)), dtype=int)
-
-    y[0][genre_number] = 1
-
-    print(file_name[-1])
-
+# Get X Matrix
+def get_X(path):
     sentence, stemmed = zip(
         *get_sentence(path))
     sentence = ''.join(sentence)
@@ -55,7 +41,35 @@ def get_criteria(path, genres):
     # Criteria 6
     criteria_6 = sixth_criteria(total_count, fdist)
 
+    x = np.zeros(shape=(1, 6), dtype=int)
     x[0] = [criteria_1, criteria_2, criteria_3, criteria_4, criteria_5, criteria_6]
+
+    return x
+
+
+# Get Y Matrix
+def get_Y(path, genres):
+    file_name = path.split("/")
+
+    genre = file_name[-2]
+    genre_number = genres.index(genre)
+
+    print(genre)
+
+    y = np.zeros(shape=(1, len(genres)), dtype=int)
+
+    y[0][genre_number] = 1
+
+    print(file_name[-1])
+
+    return y
+
+
+# Return Result of Criteria's.
+def get_criteria(path, genres):
+
+    x = get_X(path)
+    y = get_Y(path, genres)
 
     print(x[0])
     print(y[0])
