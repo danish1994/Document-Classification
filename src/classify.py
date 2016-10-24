@@ -78,7 +78,7 @@ def plot_subfigure(X, Y, title, transform, genres):
     width = Y.shape[1]
 
     if(Y[-1][0] == 0 or Y[-1][1] == 0 or Y[-1][2] == 0):
-        return_genre(X, Y, genres)
+        get_genre(X, Y, genres)
 
     for i in range(0, width):
         try:
@@ -199,7 +199,7 @@ def test_data(x):
 
 
 # Define Genre of Test Data
-def return_genre(X, Y, genres):
+def get_genre(X, Y, genres):
     x_test = X[:, 0][-1]
     y_test = X[:, 1][-1]
 
