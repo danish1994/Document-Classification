@@ -15,7 +15,9 @@ def get_criteria(path, genres):
     genre = file_name[-2]
     genre_number = genres.index(genre)
 
-    x = np.zeros(shape=(1, 4), dtype=int)
+    print(genre)
+
+    x = np.zeros(shape=(1, 6), dtype=int)
     y = np.zeros(shape=(1, len(genres)), dtype=int)
 
     y[0][genre_number] = 1
@@ -47,7 +49,13 @@ def get_criteria(path, genres):
     # Criteria 4
     criteria_4 = fourth_criteria(total_count)
 
-    x[0] = [criteria_1, criteria_2, criteria_3, criteria_4]
+    # Criteria 5
+    criteria_5 = fifth_criteria(total_count, fdist)
+
+    # Criteria 6
+    criteria_6 = sixth_criteria(total_count, fdist)
+
+    x[0] = [criteria_1, criteria_2, criteria_3, criteria_4, criteria_5, criteria_6]
 
     print(x[0])
     print(y[0])
@@ -72,7 +80,7 @@ def get_sentence(path):
 
 
 # Parse Through Parse Tree Nodes.
-def getNodes(parent):
+def get_nodes(parent):
     label_count = 0
     total_count = 0
     for node in parent:
@@ -80,13 +88,27 @@ def getNodes(parent):
             if(node.label() in ['PERSON']):
                 label_count += 1
             total_count += 1
-            x = getNodes(node)
+            x = get_nodes(node)
             label_count += x[0]
             total_count += x[1]
 
     res = [label_count, total_count]
 
     return res
+
+
+# Get Word Count
+def get_word_count(fdist, path):
+    count = 0
+
+    sentence, stemmed = zip(*get_sentence(path))
+    stemmed = ''.join(stemmed)
+    stemmed = stemmed.split(' ')
+
+    for x in stemmed:
+        count += fdist[x]
+
+    return count
 
 
 # Ratio of "I", "WE" and "You" in the Document.
@@ -118,7 +140,7 @@ def third_criteria(sentence):
 
     for sentences in after_tag:
         x = nltk.ne_chunk(sentences)
-        y = getNodes(x)
+        y = get_nodes(x)
         label_count += y[0]
         total_count += y[1]
 
@@ -128,3 +150,17 @@ def third_criteria(sentence):
 # Total Word Count
 def fourth_criteria(total_count):
     return total_count / 1000
+
+
+# Count Words Present in Thriller
+def fifth_criteria(total_count, fdist):
+
+    count = get_word_count(fdist, 'Criteria/Thriller.txt')
+    return int((count / total_count) * 1000)
+
+
+# Count Words Present in Romantic
+def sixth_criteria(total_count, fdist):
+
+    count = get_word_count(fdist, 'Criteria/Romantic.txt')
+    return int((count / total_count) * 1000)

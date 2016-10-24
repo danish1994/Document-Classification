@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -54,7 +55,7 @@ def plot_marker(i):
 
 
 # Plot Subfigure.
-def plot_subfigure(X, Y, title, transform):
+def plot_subfigure(X, Y, title, transform, genres):
     if transform == "pca":
         X = PCA(n_components=2).fit_transform(X)
     elif transform == "cca":
@@ -75,11 +76,19 @@ def plot_subfigure(X, Y, title, transform):
 
     width = Y.shape[1]
 
+    plt.scatter(X[:, 0], X[:, 1], s=80, c='gray', label='Unclassified')
+
     for i in range(0, width):
-        plt.scatter(X[np.where(Y[:, i] == 1), 0], X[np.where(
-            Y[:, i] == 1), 1], s=80, c=plot_color(i), label='Class ' + str(i))
-        plot_hyperplane(classif.estimators_[i], min_x, max_x, plot_marker(
-            i), 'Boundary\nfor class ' + str(i))
+        try:
+            plt.scatter(X[np.where(Y[:, i]), 0], X[np.where(
+                Y[:, i] == 1), 1], s=80, c=plot_color(i), label=genres[i])
+            plot_hyperplane(classif.estimators_[i], min_x, max_x, plot_marker(
+                i), 'Boundary\nfor ' + genres[i])
+        except:
+            plt.scatter(X[np.where(Y[:, i]), 0], X[np.where(
+                Y[:, i] == 1), 1], s=80, c=plot_color(i), label='Class ' + str(i))
+            plot_hyperplane(classif.estimators_[i], min_x, max_x, plot_marker(
+                i), 'Boundary\nfor Class ' + str(i))
 
     plt.xticks(())
     plt.yticks(())
@@ -93,9 +102,17 @@ def plot_subfigure(X, Y, title, transform):
 
 # Intialize Classification
 def classify(X, Y):
+
+    genres = []
+    rootdir = os.getcwd() + '/DataSet'
+    for subdir, dirs, files in os.walk(rootdir):
+        if len(dirs) > 1:
+            genres = dirs
+            break
+
     plt.figure(figsize=(8, 6))
 
-    plot_subfigure(X, Y, "Plot Graph", "cca")
+    plot_subfigure(X, Y, "Plot Graph", "cca", genres)
 
     plt.subplots_adjust(.07, .07, .70, .90, .09, .2)
 
@@ -103,8 +120,8 @@ def classify(X, Y):
 
 
 # Read Training Data from File.
-def read_from_file(path):
-    f = open(path)
+def read_from_file():
+    f = open('trained_set.txt')
     content = f.read().split('\n')
 
     x_shape = int(content[0])
@@ -146,3 +163,32 @@ def save_to_file(matrix_x, matrix_y):
 
     f = open('trained_set.txt', 'w')
     f.write(final_str)
+
+
+# Read Training Data from File.
+def test_data(x):
+    f = open('trained_set.txt')
+    content = f.read().split('\n')
+
+    x_shape = int(content[0])
+    y_shape = int(content[1])
+
+    matrix_x = np.zeros(shape=(0, x_shape), dtype=int)
+    matrix_y = np.zeros(shape=(0, y_shape), dtype=int)
+
+    for a in content[2].split('|'):
+        temp = np.ndarray(shape=(1, x_shape), dtype=int)
+        temp[0] = [int(s) for s in a.split(',')]
+        matrix_x = np.concatenate((matrix_x, temp), axis=0)
+
+    for a in content[3].split('|'):
+        temp = np.ndarray(shape=(1, y_shape), dtype=int)
+        temp[0] = [int(s) for s in a.split(',')]
+        matrix_y = np.concatenate((matrix_y, temp), axis=0)
+
+    y = np.zeros(shape=(1, y_shape), dtype=int)
+
+    matrix_x = np.concatenate((matrix_x, x), axis=0)
+    matrix_y = np.concatenate((matrix_y, y), axis=0)
+
+    classify(matrix_x, matrix_y)
