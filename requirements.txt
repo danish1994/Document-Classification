@@ -1,7 +1,5 @@
  nltk
  numpy
- scipy
- scikit-learn
  matplotlib
  setuptools
  python-dateutil
@@ -9,3 +7,5 @@
  pytz
  cycler
  lda
+ scipy
+ scikit-learn
