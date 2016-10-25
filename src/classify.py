@@ -77,6 +77,9 @@ def plot_subfigure(X, Y, title, transform, genres):
 
     width = Y.shape[1]
 
+    plt.scatter(X[:, 0], X[:, 1], s=80, c='gray',
+                label='Test Data')
+
     for i in range(0, width):
         try:
             plt.scatter(X[np.where(Y[:, i]), 0], X[np.where(
@@ -245,8 +248,6 @@ def get_genre(X, Y, genres):
         distances.append(sum / len(x_genre))
 
     i = distances.index(min(distances))
-    plt.scatter(X[:, 0], X[:, 1], s=80, c='gray',
-                label='Result - ' + genres[i])
 
     return genres[i]
 
