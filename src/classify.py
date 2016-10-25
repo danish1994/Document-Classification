@@ -77,12 +77,6 @@ def plot_subfigure(X, Y, title, transform, genres):
 
     width = Y.shape[1]
 
-    genre = ''
-
-    # Get The Genre
-    if(Y[-1][0] == 0 and Y[-1][1] == 0 and Y[-1][2] == 0):
-        genre = get_genre(X, Y, genres)
-
     for i in range(0, width):
         try:
             plt.scatter(X[np.where(Y[:, i]), 0], X[np.where(
@@ -104,11 +98,27 @@ def plot_subfigure(X, Y, title, transform, genres):
     plt.ylabel('Second principal component')
     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 
+
+# Classify Genre
+def classify_genre(X, Y, transform, genres):
+    if transform == "pca":
+        X = PCA(n_components=2).fit_transform(X)
+    elif transform == "cca":
+        X = CCA(n_components=2).fit(X, Y).transform(X)
+    else:
+        raise ValueErrorS
+
+    width = Y.shape[1]
+
+    genre = get_genre(X, Y, genres)
+
     return genre
 
 
 # Intialize Classification
 def classify(X, Y, show):
+
+    transform = 'cca'
 
     genres = []
     rootdir = os.getcwd() + '/DataSet'
@@ -117,16 +127,19 @@ def classify(X, Y, show):
             genres = dirs
             break
 
-    plt.figure(figsize=(10, 6))
-
-    genre = plot_subfigure(X, Y, "Plot Graph", "cca", genres)
-
-    plt.subplots_adjust(.07, .07, .70, .90, .09, .2)
-
     if(show):
+        plt.figure(figsize=(10, 6))
+
+        plot_subfigure(X, Y, "Plot Graph", transform, genres)
+
+        plt.subplots_adjust(.07, .07, .70, .90, .09, .2)
+
         plt.show()
 
-    return genre
+    else:
+        genre = classify_genre(X, Y, transform, genres)
+
+        return genre
 
 
 # Get Matrix X
@@ -198,13 +211,13 @@ def save_trained_data(matrix_x, matrix_y):
 
 
 # Add Test Data to Trained Data.
-def add_test_data(x, size, show):
+def add_test_data(x, show):
     content = read_trained_data()
 
     matrix_x = get_X(content)
     matrix_y = get_Y(content)
 
-    y = np.zeros(shape=(size, int(content[1])), dtype=int)
+    y = np.zeros(shape=(x.shape[0], int(content[1])), dtype=int)
 
     matrix_x = np.concatenate((matrix_x, x), axis=0)
     matrix_y = np.concatenate((matrix_y, y), axis=0)
@@ -257,7 +270,7 @@ def test_data():
             x = criteria_get_X(path)
             matrix_x = np.concatenate((matrix_x, x), axis=0)
 
-            calculated_genre = add_test_data(x, 1, False)
+            calculated_genre = add_test_data(x, False)
 
             book_name = ' '.join(file_name[-1].split('.')[0].split('-'))
 
@@ -267,6 +280,6 @@ def test_data():
                 correct += 1
             total += 1
 
-    add_test_data(matrix_x, total, True)
+    add_test_data(matrix_x, True)
 
     print('Accuracy = ' + str((correct / total) * 100))
