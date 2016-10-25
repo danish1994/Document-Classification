@@ -1,8 +1,8 @@
-from classify import read_from_file
+import os
+
+from classify import classify
 from classify import test_data
-from criteria import get_X
+from classify import show_trained_data
 
-x = get_X('DataSet/Fiction/Romantic/A-Walk-to-Remember.txt')
-test_data(x)
-
-# read_from_file()
+# test_data()
+show_trained_data()

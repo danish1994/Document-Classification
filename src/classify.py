@@ -11,6 +11,7 @@ from sklearn.decomposition import PCA
 from sklearn.cross_decomposition import CCA
 from numpy import ones, vstack
 from numpy.linalg import lstsq
+from criteria import get_X as criteria_get_X
 
 
 # Get Equation of Line.
@@ -76,10 +77,11 @@ def plot_subfigure(X, Y, title, transform, genres):
 
     width = Y.shape[1]
 
+    genre = ''
+
     # Get The Genre
     if(Y[-1][0] == 0 and Y[-1][1] == 0 and Y[-1][2] == 0):
         genre = get_genre(X, Y, genres)
-        print(genre)
 
     for i in range(0, width):
         try:
@@ -102,9 +104,11 @@ def plot_subfigure(X, Y, title, transform, genres):
     plt.ylabel('Second principal component')
     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 
+    return genre
+
 
 # Intialize Classification
-def classify(X, Y):
+def classify(X, Y, show):
 
     genres = []
     rootdir = os.getcwd() + '/DataSet'
@@ -115,11 +119,14 @@ def classify(X, Y):
 
     plt.figure(figsize=(10, 6))
 
-    plot_subfigure(X, Y, "Plot Graph", "cca", genres)
+    genre = plot_subfigure(X, Y, "Plot Graph", "cca", genres)
 
     plt.subplots_adjust(.07, .07, .70, .90, .09, .2)
 
-    plt.show()
+    if(show):
+        plt.show()
+
+    return genre
 
 
 # Get Matrix X
@@ -150,19 +157,26 @@ def get_Y(content):
     return matrix_y
 
 
-# Read Training Data from File.
-def read_from_file():
-    f = open('trained_set.txt')
-    content = f.read().split('\n')
+# Show Trained Data (as a Plot).
+def show_trained_data():
+    content = read_trained_data()
 
     matrix_x = get_X(content)
     matrix_y = get_Y(content)
 
-    classify(matrix_x, matrix_y)
+    classify(matrix_x, matrix_y, True)
+
+
+# Read Training Data from File.
+def read_trained_data():
+    f = open('trained_set.txt')
+    content = f.read().split('\n')
+
+    return content
 
 
 # Save Training Result to File.
-def save_to_file(matrix_x, matrix_y):
+def save_trained_data(matrix_x, matrix_y):
     matrix_x_str = ''
     for a in matrix_x:
         matrix_x_str += ','.join(str(e) for e in a)
@@ -183,20 +197,21 @@ def save_to_file(matrix_x, matrix_y):
     f.write(final_str)
 
 
-# Read Training Data from File.
-def test_data(x):
-    f = open('trained_set.txt')
-    content = f.read().split('\n')
+# Add Test Data to Trained Data.
+def add_test_data(x, size, show):
+    content = read_trained_data()
 
     matrix_x = get_X(content)
     matrix_y = get_Y(content)
 
-    y = np.zeros(shape=(1, int(content[1])), dtype=int)
+    y = np.zeros(shape=(size, int(content[1])), dtype=int)
 
     matrix_x = np.concatenate((matrix_x, x), axis=0)
     matrix_y = np.concatenate((matrix_y, y), axis=0)
 
-    classify(matrix_x, matrix_y)
+    genre = classify(matrix_x, matrix_y, show)
+
+    return genre
 
 
 # Define Genre of Test Data
@@ -221,3 +236,37 @@ def get_genre(X, Y, genres):
                 label='Result - ' + genres[i])
 
     return genres[i]
+
+
+# Get Result and Accuracy of Test Data
+def test_data():
+
+    total = 0
+    correct = 0
+
+    matrix_x = np.zeros(shape=(0, 6), dtype=int)
+
+    rootdir = os.getcwd() + '/TestData'
+    for subdir, dirs, files in os.walk(rootdir):
+        for file in files:
+            path = os.path.join(subdir, file)
+
+            file_name = path.split("/")
+            genre = file_name[-2]
+
+            x = criteria_get_X(path)
+            matrix_x = np.concatenate((matrix_x, x), axis=0)
+
+            calculated_genre = add_test_data(x, 1, False)
+
+            book_name = ' '.join(file_name[-1].split('.')[0].split('-'))
+
+            print(book_name + ' - ' + calculated_genre)
+
+            if(calculated_genre == genre):
+                correct += 1
+            total += 1
+
+    add_test_data(matrix_x, total, True)
+
+    print('Accuracy = ' + str((correct / total) * 100))

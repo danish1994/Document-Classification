@@ -58,13 +58,13 @@ def get_Y(path, genres):
     genre = file_name[-2]
     genre_number = genres.index(genre)
 
-    print(genre)
+    book_name = ' '.join(file_name[-1].split('.')[0].split('-'))
+
+    print(book_name + ' - ' + genre)
 
     y = np.zeros(shape=(1, len(genres)), dtype=int)
 
     y[0][genre_number] = 1
-
-    print(file_name[-1])
 
     return y
 
