@@ -263,6 +263,8 @@ def test_data():
         for file in files:
             path = os.path.join(subdir, file)
 
+            print(path)
+
             file_name = path.split("/")
             genre = file_name[-2]
 
