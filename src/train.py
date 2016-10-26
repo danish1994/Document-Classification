@@ -1,7 +1,7 @@
 import os
 import numpy as np
 from criteria import get_criteria
-from classify import classify
+from classify import show_trained_data
 from classify import save_trained_data
 
 
@@ -31,4 +31,4 @@ for subdir, dirs, files in os.walk(rootdir):
         matrix_y = np.concatenate((matrix_y, y), axis=0)
 
 save_trained_data(matrix_x, matrix_y)
-# classify(matrix_x, matrix_y)
+show_trained_data()

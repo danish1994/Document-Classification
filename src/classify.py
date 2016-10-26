@@ -3,10 +3,8 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 
-from sklearn.datasets import make_multilabel_classification
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.svm import SVC
-from sklearn.preprocessing import LabelBinarizer
 from sklearn.decomposition import PCA
 from sklearn.cross_decomposition import CCA
 from numpy import ones, vstack
@@ -20,7 +18,7 @@ def get_line_equation(x1, y1, x2, y2):
     x_coords, y_coords = zip(*points)
     A = vstack([x_coords, ones(len(x_coords))]).T
     m, c = lstsq(A, y_coords)[0]
-    # print("Line Solution is y = {m}x + {c}".format(m=round(m, 2), c=round(c, 2)))
+    # print('Line Solution is y = {m}x + {c}'.format(m=round(m, 2), c=round(c, 2)))
 
 
 # PLot the HyperPlane Classifying the Data.
@@ -252,7 +250,7 @@ def get_genre(X, Y, genres):
     return genres[i]
 
 
-# Get Result and Accuracy of Test Data
+# Get Result and Accuracy from Test Data
 def test_data():
 
     total = 0
@@ -268,12 +266,12 @@ def test_data():
             file_name = path.split("/")
             genre = file_name[-2]
 
+            book_name = ' '.join(file_name[-1].split('.')[0].split('-'))
+
             x = criteria_get_X(path)
             matrix_x = np.concatenate((matrix_x, x), axis=0)
 
             calculated_genre = add_test_data(x, False)
-
-            book_name = ' '.join(file_name[-1].split('.')[0].split('-'))
 
             print(book_name + ' - ' + calculated_genre)
 
@@ -281,6 +279,26 @@ def test_data():
                 correct += 1
             total += 1
 
+    accuracy = round((correct / total) * 100, 2)
+
     add_test_data(matrix_x, True)
 
-    print('Accuracy = ' + str((correct / total) * 100))
+    print('Accuracy = {accuracy}%.'.format(
+        accuracy = accuracy))
+
+
+# Test Individual File
+def test_single_data(path):
+    matrix_x = np.zeros(shape=(0, 6), dtype=int)
+
+    file_name = path.split("/")
+    book_name = ' '.join(file_name[-1].split('.')[0].split('-'))
+
+    x = criteria_get_X(path)
+    matrix_x = np.concatenate((matrix_x, x), axis=0)
+
+    calculated_genre = add_test_data(x, False)
+
+    print(book_name + ' - ' + calculated_genre)
+
+    add_test_data(x, True)
