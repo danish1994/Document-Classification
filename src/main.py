@@ -20,7 +20,7 @@ def test_file_codec():
 
 # show_trained_data()
 # test_data()
-# test_single_data('TestData/Romantic/The-Diaries-of-Bunty-Danvers.txt')
+test_single_data('DataSet/Fiction/Romantic/A-Breath-of-Snow-and-Ashes.txt')
 
 test_file_codec()
 
