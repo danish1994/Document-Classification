@@ -6,7 +6,7 @@ from classify import show_trained_data
 
 
 def test_file_codec():
-    rootdir = os.getcwd() + '/TestData'
+    rootdir = os.getcwd() + '/DataSet'
     for subdir, dirs, files in os.walk(rootdir):
         for file in files:
             path = os.path.join(subdir, file)
