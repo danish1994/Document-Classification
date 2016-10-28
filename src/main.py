@@ -18,8 +18,8 @@ def test_file_codec():
                 print(path.split('/')[-1])
 
 
-show_trained_data()
-# test_data()
+# show_trained_data()
+test_data()
 # test_single_data('DataSet/Fiction/Romantic/A-Breath-of-Snow-and-Ashes.txt')
 
 # test_file_codec()

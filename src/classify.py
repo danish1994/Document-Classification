@@ -263,8 +263,6 @@ def test_data():
         for file in files:
             path = os.path.join(subdir, file)
 
-            print(path)
-
             file_name = path.split("/")
             genre = file_name[-2]
 
@@ -283,10 +281,11 @@ def test_data():
 
     accuracy = round((correct / total) * 100, 2)
 
-    add_test_data(matrix_x, True)
-
     print('Accuracy = {accuracy}%.'.format(
         accuracy = accuracy))
+
+    add_test_data(matrix_x, True)
+
 
 
 # Test Individual File
