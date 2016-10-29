@@ -6,20 +6,22 @@ import numpy as np
 from nltk.stem.snowball import SnowballStemmer
 from nltk.corpus import stopwords
 from nltk.probability import FreqDist
+from utility import pdf_to_text
+from tqdm import tqdm
 
 
 # Get X Matrix
 def get_X(path):
     sentence, stemmed = zip(
-        *get_sentence(path))
+        *get_sentence(path, True))
     sentence = ''.join(sentence)
     stemmed = ''.join(stemmed)
 
     # Defining Counts
     total_count = 0
     fdist = FreqDist()
-    for seeent in nltk.tokenize.sent_tokenize(stemmed):
-        for word in nltk.tokenize.word_tokenize(seeent):
+    for x in nltk.tokenize.sent_tokenize(stemmed):
+        for word in nltk.tokenize.word_tokenize(x):
             fdist[word] += 1
             total_count += 1
 
@@ -58,10 +60,6 @@ def get_Y(path, genres):
     genre = file_name[-2]
     genre_number = genres.index(genre)
 
-    book_name = ' '.join(file_name[-1].split('.')[0].split('-'))
-
-    print(book_name + ' - ' + genre)
-
     y = np.zeros(shape=(1, len(genres)), dtype=int)
 
     y[0][genre_number] = 1
@@ -82,9 +80,26 @@ def get_criteria(path, genres):
 
 
 # Get Senetence from File removing Stop Words and Stemming.
-def get_sentence(path):
-    f = open(path)
-    sentence = f.read()
+def get_sentence(path, show):
+
+    file_name = path.split("/")
+    file_format = file_name[-1].split('.')[-1]
+    book_name = ' '.join(file_name[-1].split('.')[0].split('-')).title()
+
+    sentence = ''
+
+    if(file_format == 'pdf'):
+        sentence = pdf_to_text(path)
+    else:
+        if(show):
+            print('Reading "' + book_name + '" From Text')
+            for i in tqdm(range(1)):
+                f = open(path)
+                sentence = f.read()
+        else:
+            f = open(path)
+            sentence = f.read()
+
     stemmer = SnowballStemmer('english')
     stop = set(stopwords.words('english'))
     sentence = [i for i in sentence.split() if i not in stop]
@@ -119,7 +134,7 @@ def get_nodes(parent):
 def get_word_count(fdist, path):
     count = 0
 
-    sentence, stemmed = zip(*get_sentence(path))
+    sentence, stemmed = zip(*get_sentence(path, False))
     stemmed = ''.join(stemmed)
     stemmed = stemmed.split(' ')
 

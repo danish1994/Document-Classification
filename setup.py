@@ -19,5 +19,7 @@ setup(name='Document Classification',
           'pyparsing',
           'pytz',
           'cycler',
-          'lda'
+          'lda',
+          'pypdf2',
+          'tqdm'
       ])

@@ -266,7 +266,7 @@ def test_data():
             file_name = path.split("/")
             genre = file_name[-2]
 
-            book_name = ' '.join(file_name[-1].split('.')[0].split('-'))
+            book_name = ' '.join(file_name[-1].split('.')[0].split('-')).title()
 
             x = criteria_get_X(path)
             matrix_x = np.concatenate((matrix_x, x), axis=0)

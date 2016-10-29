@@ -9,3 +9,5 @@
  lda
  scipy
  scikit-learn
+ pypdf2
+ tqdm
