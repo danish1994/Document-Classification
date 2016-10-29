@@ -266,7 +266,8 @@ def test_data():
             file_name = path.split("/")
             genre = file_name[-2]
 
-            book_name = ' '.join(file_name[-1].split('.')[0].split('-')).title()
+            book_name = ' '.join(
+                file_name[-1].split('.')[0].split('-')).title()
 
             x = criteria_get_X(path)
             matrix_x = np.concatenate((matrix_x, x), axis=0)
@@ -281,11 +282,10 @@ def test_data():
 
     accuracy = round((correct / total) * 100, 2)
 
-    print('Accuracy = {accuracy}%.'.format(
-        accuracy = accuracy))
+    print('\n\nAccuracy = {accuracy}%.'.format(
+        accuracy=accuracy))
 
     add_test_data(matrix_x, True)
-
 
 
 # Test Individual File

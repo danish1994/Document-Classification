@@ -12,45 +12,67 @@ from tqdm import tqdm
 
 # Get X Matrix
 def get_X(path):
-    sentence, stemmed = zip(
-        *get_sentence(path, True))
+
+    sentence, stemmed = zip(*get_sentence(path, True))
     sentence = ''.join(sentence)
     stemmed = ''.join(stemmed)
 
-    # Defining Counts
-    total_count = 0
-    fdist = FreqDist()
-    for x in nltk.tokenize.sent_tokenize(stemmed):
-        for word in nltk.tokenize.word_tokenize(x):
-            fdist[word] += 1
-            total_count += 1
+    print('Calculating Classification Criteria\'s')
 
-    # Criteria 1
-    criteria_1 = first_criteria(total_count, fdist)
+    with tqdm(total=100) as pbar:
 
-    # Criteria 2
-    criteria_2 = second_criteria(total_count, fdist)
+        # Defining Counts
+        total_count = 0
+        fdist = FreqDist()
+        for x in nltk.tokenize.sent_tokenize(stemmed):
+            for word in nltk.tokenize.word_tokenize(x):
+                fdist[word] += 1
+                total_count += 1
 
-    # Criteria 3
-    criteria_3 = third_criteria(sentence) / 10
+        pbar.update(40)
 
-    # Criteria 4
-    criteria_4 = fourth_criteria(total_count)
+        # Criteria 1
+        criteria_1 = first_criteria(total_count, fdist)
 
-    # Criteria 5
-    criteria_5 = fifth_criteria(total_count, fdist)
+        pbar.update(5)
 
-    # Criteria 6
-    criteria_6 = sixth_criteria(total_count, fdist)
+        # Criteria 2
+        criteria_2 = second_criteria(total_count, fdist)
 
-    # Criteria 7
-    criteria_7 = seventh_criteria(total_count, fdist)
+        pbar.update(5)
 
-    x = np.zeros(shape=(1, 6), dtype=int)
-    x[0] = [criteria_1, criteria_2, criteria_3,
-            criteria_4, criteria_5, criteria_6]
+        # Criteria 3
+        criteria_3 = third_criteria(sentence) / 10
 
-    return x
+        pbar.update(30)
+
+        # Criteria 4
+        criteria_4 = fourth_criteria(total_count)
+
+        pbar.update(5)
+
+        # Criteria 5
+        criteria_5 = fifth_criteria(total_count, fdist)
+
+        pbar.update(5)
+
+        # Criteria 6
+        criteria_6 = sixth_criteria(total_count, fdist)
+
+        pbar.update(5)
+
+        # Criteria 7
+        criteria_7 = seventh_criteria(total_count, fdist)
+
+        pbar.update(5)
+
+        x = np.zeros(shape=(1, 6), dtype=int)
+        x[0] = [criteria_1, criteria_2, criteria_3,
+                criteria_4, criteria_5, criteria_6]
+
+        pbar.close()
+
+        return x
 
 
 # Get Y Matrix
@@ -92,10 +114,12 @@ def get_sentence(path, show):
         sentence = pdf_to_text(path)
     else:
         if(show):
-            print('Reading "' + book_name + '" From Text')
-            for i in tqdm(range(1)):
+            print('Reading "' + book_name + '"')
+            with tqdm(total=2) as pbar:
                 f = open(path)
+                pbar.update(1)
                 sentence = f.read()
+                pbar.update(1)
         else:
             f = open(path)
             sentence = f.read()
