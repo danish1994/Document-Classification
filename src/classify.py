@@ -277,7 +277,10 @@ def test_data():
             print(book_name + ' - ' + calculated_genre)
 
             if(calculated_genre == genre):
+                print('Right Answer')
                 correct += 1
+            else:
+                print('Wront Answer')
             total += 1
 
     accuracy = round((correct / total) * 100, 2)
