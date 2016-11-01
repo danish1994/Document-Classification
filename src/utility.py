@@ -23,6 +23,6 @@ def pdf_to_text(path):
         pageObj = pdfReader.getPage(i)
         res += pageObj.extractText().strip()
 
-    print(len(res.split(' ')))
+    print('Word Count - ' + len(res.split(' ')))
 
     return res

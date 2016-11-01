@@ -285,7 +285,7 @@ def test_data():
 
     accuracy = round((correct / total) * 100, 2)
 
-    print('\n\nAccuracy = {accuracy}%.'.format(
+    print('\n\nAccuracy = {accuracy}%.\n\n'.format(
         accuracy=accuracy))
 
     add_test_data(matrix_x, True)
