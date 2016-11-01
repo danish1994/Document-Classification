@@ -114,7 +114,7 @@ def get_sentence(path, show):
         sentence = pdf_to_text(path)
     else:
         if(show):
-            print('Reading "' + book_name + '"')
+            print('\n\nReading "' + book_name + '"')
             with tqdm(total=2) as pbar:
                 f = open(path)
                 pbar.update(1)

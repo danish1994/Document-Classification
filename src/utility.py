@@ -18,7 +18,7 @@ def pdf_to_text(path):
 
     n = pdfReader.numPages
 
-    print('Reading "' + book_name + '"')
+    print('\n\nReading "' + book_name + '"')
     for i in tqdm(range(n)):
         pageObj = pdfReader.getPage(i)
         res += pageObj.extractText().strip()

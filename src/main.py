@@ -6,7 +6,7 @@ from classify import show_trained_data
 
 
 def test_file_codec():
-    rootdir = os.getcwd() + '/DataSet'
+    rootdir = os.getcwd() + '/TestData'
     for subdir, dirs, files in os.walk(rootdir):
         for file in files:
             path = os.path.join(subdir, file)
@@ -23,4 +23,3 @@ test_data()
 # test_single_data('DataSet/Fiction/Romantic/A-Breath-of-Snow-and-Ashes.txt')
 
 # test_file_codec()
-
