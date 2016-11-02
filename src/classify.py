@@ -11,8 +11,9 @@ from numpy import ones, vstack
 from numpy.linalg import lstsq
 from criteria import get_X as criteria_get_X
 
-
 # Get Equation of Line.
+
+
 def get_line_equation(x1, y1, x2, y2):
     points = [(x1, y1), (x2, y2)]
     x_coords, y_coords = zip(*points)
@@ -259,6 +260,7 @@ def test_data():
     matrix_x = np.zeros(shape=(0, 6), dtype=int)
 
     rootdir = os.getcwd() + '/TestData'
+
     for subdir, dirs, files in os.walk(rootdir):
         for file in files:
             path = os.path.join(subdir, file)
@@ -285,7 +287,10 @@ def test_data():
 
     accuracy = round((correct / total) * 100, 2)
 
-    print('\n\nAccuracy = {accuracy}%.\n\n'.format(
+    print('\nRight = \t{correct}'.format(correct=correct))
+    print('Total = \t{total}'.format(total=total))
+
+    print('Accuracy = \t{accuracy}%.\n'.format(
         accuracy=accuracy))
 
     add_test_data(matrix_x, True)
