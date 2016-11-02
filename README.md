@@ -14,7 +14,9 @@ Document Classification Project based on Python.
   - [PyTZ](http://pytz.sourceforge.net/) - Dependency for MatPlotLib
   - [Cycler](http://matplotlib.org/cycler/) - Dependency for MatPlotLib
   - [MatPlotLib](http://matplotlib.org/) - Graph Plotting Library
-
+  - [PyPDF2](https://pythonhosted.org/PyPDF2/) - Read Text From PDF
+  - [LDA](https://pypi.python.org/pypi/lda) - Latent Dirichlet Allocation Library
+  - [TQDM](https://pypi.python.org/pypi/tqdm) - Progress Bar Library
 
 ### Setup
 

@@ -280,7 +280,7 @@ def test_data():
                 print('Right Answer')
                 correct += 1
             else:
-                print('Wront Answer')
+                print('Wrong Answer')
             total += 1
 
     accuracy = round((correct / total) * 100, 2)
