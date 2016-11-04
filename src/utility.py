@@ -15,9 +15,6 @@ def pdf_to_text(path):
 
     res = ''
 
-    if(pdfReader.isEncrypted):
-        pdfReader.decrypt('rosebud')
-
     n = pdfReader.numPages
 
     for i in tqdm(range(n)):
