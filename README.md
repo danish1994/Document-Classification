@@ -27,7 +27,7 @@ Document Classification Project based on Python.
 ```
 
 
-*Run the following in Terminal for Initial Setup
+* Run the following in Terminal for Initial Setup
 
 ```
 # python3 setup.py develop
