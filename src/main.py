@@ -1,7 +1,5 @@
 import os
 
-from classify import test_data
-from classify import test_single_data
 from classify import show_trained_data
 
 
@@ -18,8 +16,6 @@ def test_file_codec():
                 print(path.split('/')[-1])
 
 
-# show_trained_data()
-test_data()
-# test_single_data('DataSet/Fiction/Romantic/A-Breath-of-Snow-and-Ashes.txt')
+show_trained_data()
 
 # test_file_codec()
