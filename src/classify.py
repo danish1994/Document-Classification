@@ -310,9 +310,4 @@ def test_single_data(path):
 
     print(book_name + ' - ' + calculated_genre)
 
-    genre = file_name[-2]
-
-    if(calculated_genre == genre):
-        print('Right Answer')
-
     add_test_data(x, True)
