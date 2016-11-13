@@ -1,8 +1,11 @@
 import os
 import numpy as np
+
 from criteria import get_criteria
 from classify import show_trained_data
 from classify import save_trained_data
+from criteria import x_shape
+
 
 
 # Generate List of Genres
@@ -15,7 +18,7 @@ for subdir, dirs, files in os.walk(rootdir):
 
 
 # Intitalizing Result Matrix for MatPlot.
-matrix_x = np.zeros(shape=(0, 6), dtype=int)
+matrix_x = np.zeros(shape=(0, x_shape), dtype=int)
 matrix_y = np.zeros(shape=(0, len(genres)), dtype=int)
 
 

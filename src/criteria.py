@@ -3,11 +3,16 @@ import nltk
 import itertools
 import nltk.tag as tagger
 import numpy as np
+
 from nltk.stem.snowball import SnowballStemmer
 from nltk.corpus import stopwords
 from nltk.probability import FreqDist
 from utility import pdf_to_text
 from tqdm import tqdm
+
+
+# Shame of X Matrix
+x_shape = 6
 
 
 # Get X Matrix
@@ -66,7 +71,7 @@ def get_X(path):
 
     pbar.update(5)
 
-    x = np.zeros(shape=(1, 6), dtype=int)
+    x = np.zeros(shape=(1, x_shape), dtype=int)
     x[0] = [criteria_1, criteria_2, criteria_3, criteria_4, criteria_5, criteria_6]
 
     pbar.close()

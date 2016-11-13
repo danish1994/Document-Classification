@@ -10,10 +10,10 @@ from sklearn.cross_decomposition import CCA
 from numpy import ones, vstack
 from numpy.linalg import lstsq
 from criteria import get_X as criteria_get_X
+from criteria import x_shape
+
 
 # Get Equation of Line.
-
-
 def get_line_equation(x1, y1, x2, y2):
     points = [(x1, y1), (x2, y2)]
     x_coords, y_coords = zip(*points)
@@ -257,7 +257,7 @@ def test_data():
     total = 0
     correct = 0
 
-    matrix_x = np.zeros(shape=(0, 6), dtype=int)
+    matrix_x = np.zeros(shape=(0, x_shape), dtype=int)
 
     rootdir = os.getcwd() + '/TestData'
 
@@ -298,7 +298,7 @@ def test_data():
 
 # Test Individual File
 def test_single_data(path):
-    matrix_x = np.zeros(shape=(0, 6), dtype=int)
+    matrix_x = np.zeros(shape=(0, x_shape), dtype=int)
 
     file_name = path.split("/")
     book_name = ' '.join(file_name[-1].split('.')[0].split('-'))
