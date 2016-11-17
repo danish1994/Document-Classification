@@ -33,5 +33,6 @@ for subdir, dirs, files in os.walk(rootdir):
         matrix_x = np.concatenate((matrix_x, x), axis=0)
         matrix_y = np.concatenate((matrix_y, y), axis=0)
 
+
 save_trained_data(matrix_x, matrix_y)
 show_trained_data()
